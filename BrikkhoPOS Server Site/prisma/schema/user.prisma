@@ -1,9 +1,10 @@
-model user {
-  id     Int     @id @default(autoincrement())
-  email  String  @unique
+model User {
+  id     Int          @id @default(autoincrement())
+  email  String       @unique
   name   String?
-  role   Role    @default(USER)
-  status Status  @default(ACTIVE)
+  phone  String?
+  role   Role         @default(USER)
+  status ActiveStatus @default(ACTIVE)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

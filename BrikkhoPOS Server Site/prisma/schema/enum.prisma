@@ -3,7 +3,7 @@ enum Role {
   ADMIN
 }
 
-enum Status {
+enum ActiveStatus {
   ACTIVE
   INACTIVE
 }
