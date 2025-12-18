@@ -1,9 +1,11 @@
 interface IUser {
     id: string;
-    name: string;
     email: string;
-    role: IRole;
     password: string;
+    name?: string;
+    phone?: string;
+    role: IRole;
+    status: IActiveStatus;
     createdAt: Date;
     updatedAt: Date;
 }

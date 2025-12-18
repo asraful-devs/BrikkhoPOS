@@ -1,12 +1,10 @@
 ----> Date: 18-12-2025
 
-1. User All function. Create, Get, Single Get, Update, Delete(soft_Delete).
+1. User & Admin All function. Create, Get, Single Get, Update, Delete(soft_Delete).
 
-2. Admin All function. Create, Get, Single Get, Update, Delete(soft_Delete).
+2. Login, LogOut, Password Change, Forgate Password
 
-3. Login, LogOut, Password Change, Forgate Password
-
-4. Worker Table(Create). Admin Create All Worker function.
+3. Worker Table(Create). Admin Create All Worker function.
 
 
 

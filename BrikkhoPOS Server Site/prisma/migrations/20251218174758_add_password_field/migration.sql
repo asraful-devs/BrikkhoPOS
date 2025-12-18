@@ -6,8 +6,9 @@ CREATE TYPE "ActiveStatus" AS ENUM ('ACTIVE', 'INACTIVE');
 
 -- CreateTable
 CREATE TABLE "User" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
     "name" TEXT,
     "phone" TEXT,
     "role" "Role" NOT NULL DEFAULT 'USER',
