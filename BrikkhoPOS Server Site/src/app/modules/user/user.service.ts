@@ -29,7 +29,7 @@ const createUser = async (req: Request) => {
     const result = await prisma.user.create({
         data: {
             ...payload,
-            password: payload.password,
+            password: hashPassword,
         },
     });
 

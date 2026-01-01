@@ -1,9 +1,0 @@
-enum Role {
-  USER
-  ADMIN
-}
-
-enum ActiveStatus {
-  ACTIVE
-  INACTIVE
-}

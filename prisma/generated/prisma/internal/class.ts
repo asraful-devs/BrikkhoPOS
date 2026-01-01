@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.2.0",
   "engineVersion": "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3",
   "activeProvider": "postgresql",
-  "inlineSchema": "enum Role {\n  USER\n  ADMIN\n}\n\nenum ActiveStatus {\n  ACTIVE\n  INACTIVE\n}\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel User {\n  id        String       @id @default(uuid())\n  email     String       @unique\n  password  String\n  name      String?\n  phone     String?\n  role      Role         @default(USER)\n  status    ActiveStatus @default(ACTIVE)\n  createdAt DateTime     @default(now())\n  updatedAt DateTime     @updatedAt\n}\n",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\n// Import all models from separate files\nmodel User {\n  id        String       @id @default(uuid())\n  email     String       @unique\n  password  String\n  name      String?\n  phone     String?\n  role      Role         @default(USER)\n  status    ActiveStatus @default(ACTIVE)\n  createdAt DateTime     @default(now())\n  updatedAt DateTime     @updatedAt\n}\n\nenum Role {\n  USER\n  ADMIN\n  MANAGER\n}\n\nenum ActiveStatus {\n  ACTIVE\n  INACTIVE\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
