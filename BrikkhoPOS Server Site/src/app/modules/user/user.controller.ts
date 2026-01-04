@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import status from 'http-status';
+import pick from '../../helper/pick';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { UserService } from './user.service';
@@ -16,7 +17,9 @@ const CreateUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 const GetAllusers = catchAsync(async (req: Request, res: Response) => {
-    const result = await UserService.getAllusers();
+    const options = pick(req.query, ['page', 'limit', 'sortBy', 'sortOrder']);
+
+    const result = await UserService.getAllusers(options);
 
     sendResponse(res, {
         statusCode: status.OK,

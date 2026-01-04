@@ -4,6 +4,7 @@ import status from 'http-status';
 import { prisma } from '../../../../lib/prisma';
 import config from '../../config';
 import ApiError from '../../error/ApiError';
+import { IOptions, PaginationHelper } from '../../helper/paginationHelper';
 
 const createUser = async (req: Request) => {
     const payload = req.body;
@@ -36,9 +37,26 @@ const createUser = async (req: Request) => {
     return result;
 };
 
-const getAllusers = async () => {
-    const users = await prisma.user.findMany();
-    return users;
+const getAllusers = async (options: IOptions) => {
+    const { page, limit, skip } = PaginationHelper.calculatePagination(options);
+
+    const users = await prisma.user.findMany({
+        skip: skip,
+        take: limit,
+        orderBy:
+            options.sortBy && options.sortOrder
+                ? { [options.sortBy]: options.sortOrder }
+                : { createdAt: 'desc' },
+    });
+
+    return {
+        meta: {
+            page,
+            limit,
+            total: users.length,
+        },
+        data: users.slice(skip, skip + limit),
+    };
 };
 
 const getUserById = async (id: string) => {
