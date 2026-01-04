@@ -37,10 +37,48 @@ const createUser = async (req: Request) => {
 };
 
 const getAllusers = async () => {
-    // Logic to fetch all users from the database
+    const users = await prisma.user.findMany();
+    return users;
+};
+
+const getUserById = async (id: string) => {
+    const user = await prisma.user.findUnique({
+        where: { id },
+    });
+    return user;
+};
+
+const updateUser = async (req: Request) => {
+    const { id } = req.params;
+    const payload = req.body;
+    // Update user logic here
+    const updatedUser = await prisma.user.update({
+        where: { id, status: 'ACTIVE' },
+        data: payload,
+    });
+    return updatedUser;
+};
+
+const softDeleteUser = async (id: string) => {
+    const softDeletedUser = await prisma.user.update({
+        where: { id, status: 'ACTIVE' },
+        data: { status: 'INACTIVE' },
+    });
+    return softDeletedUser;
+};
+
+const deleteUser = async (id: string) => {
+    const deletedUser = await prisma.user.delete({
+        where: { id, status: 'ACTIVE' },
+    });
+    return deletedUser;
 };
 
 export const UserService = {
     createUser,
     getAllusers,
+    getUserById,
+    updateUser,
+    softDeleteUser,
+    deleteUser,
 };

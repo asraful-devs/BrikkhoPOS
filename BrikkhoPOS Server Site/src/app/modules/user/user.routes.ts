@@ -13,4 +13,16 @@ router.post(
 
 router.get('/', UserController.GetAllusers);
 
+router.get('/:id', UserController.GetUserById);
+
+router.patch(
+    '/update-user/:id',
+    validateRequest(userVaildation.updateUserZodSchema),
+    UserController.UpdateUser
+);
+
+router.delete('/soft-delete-user/:id', UserController.SoftDeleteUser);
+
+router.delete('/delete-user/:id', UserController.DeleteUser);
+
 export const UserRoutes = router;

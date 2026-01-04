@@ -8,6 +8,13 @@ const createUserZodSchema = z.object({
     role: z.enum(['ADMIN', 'USER']).optional(),
 });
 
+const updateUserZodSchema = z.object({
+    name: z.string().optional(),
+    phone: z.string().optional(),
+    status: z.enum(['ACTIVE', 'INACTIVE']).optional(),
+});
+
 export const userVaildation = {
     createUserZodSchema,
+    updateUserZodSchema,
 };
