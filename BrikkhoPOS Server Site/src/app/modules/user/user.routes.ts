@@ -21,7 +21,7 @@ router.patch(
     UserController.UpdateUser
 );
 
-router.delete('/soft-delete-user/:id', UserController.SoftDeleteUser);
+router.patch('/soft-delete-user/:id', UserController.SoftDeleteUser);
 
 router.delete('/delete-user/:id', UserController.DeleteUser);
 

@@ -58,6 +58,7 @@ model Worker {
   phoneNumber    String?
   email          String?      @unique
   status         ActiveStatus @default(ACTIVE)
+  isDeleted      Boolean      @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
