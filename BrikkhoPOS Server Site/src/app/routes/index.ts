@@ -2,6 +2,7 @@ import express from 'express';
 import { AttendanceRoutes } from '../modules/attendance/attendance.route';
 import { AuthRoutes } from '../modules/auth/auth.route';
 import { UserRoutes } from '../modules/user/user.routes';
+import { WeeklySummaryRoutes } from '../modules/weeklySummary/weeklySummary.routes';
 import { WorkerRoutes } from '../modules/worker/worker.routes';
 
 const router = express.Router();
@@ -22,6 +23,10 @@ const moduleRoutes = [
     {
         path: '/attendance',
         route: AttendanceRoutes,
+    },
+    {
+        path: '/weekly-summary',
+        route: WeeklySummaryRoutes,
     },
 ];
 

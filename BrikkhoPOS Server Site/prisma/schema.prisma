@@ -71,7 +71,7 @@ model Worker {
 model Attendance {
   id        String   @id @default(cuid())
   workerId  String
-  date      DateTime @default(now())
+  date      DateTime @default(now()) @db.Date
   isPresent Boolean  @default(true)
   workHours Float?   @default(8)
   note      String?
@@ -88,8 +88,8 @@ model Attendance {
 model WeeklySummary {
   id              String    @id @default(cuid())
   workerId        String
-  weekStartDate   DateTime
-  weekEndDate     DateTime
+  weekStartDate   DateTime  @db.Date
+  weekEndDate     DateTime  @db.Date
   totalDaysWorked Int
   totalSalary     Float
   isPaid          Boolean   @default(false)

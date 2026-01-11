@@ -7,10 +7,23 @@ import { IOptions, PaginationHelper } from '../../helper/paginationHelper';
 const createAttendance = async (req: Request) => {
     const payload = req.body;
 
-    const result = await prisma.attendance.create({
-        data: payload,
-    });
-    return result;
+    try {
+        const result = await prisma.attendance.create({
+            data: payload,
+            include: {
+                worker: true,
+            },
+        });
+        return result;
+    } catch (error: any) {
+        if (error.code === 'P2002') {
+            throw new ApiError(
+                400,
+                `Attendance already exists for worker on this date. Please update existing record instead.`
+            );
+        }
+        throw error;
+    }
 };
 
 const getAllAttendances = async (
