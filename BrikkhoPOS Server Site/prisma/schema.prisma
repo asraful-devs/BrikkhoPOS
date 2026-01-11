@@ -1,0 +1,121 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Enum
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum ActiveStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum AdjustmentType {
+  BONUS
+  OVERTIME
+  DEDUCTION
+  ADVANCE
+}
+
+// User Modles
+model User {
+  id        String       @id @default(uuid())
+  email     String       @unique
+  password  String
+  name      String?
+  phone     String?
+  role      Role         @default(USER)
+  status    ActiveStatus @default(ACTIVE)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+// workers models
+
+model Worker {
+  id             String       @id @default(uuid())
+  name           String
+  dailySalary    Float
+  address        String?
+  profilePicture String?
+  age            Int?
+  phoneNumber    String?
+  email          String?      @unique
+  status         ActiveStatus @default(ACTIVE)
+  isDeleted      Boolean      @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // relations
+  attendances     Attendance[]
+  weeklySummaries WeeklySummary[]
+}
+
+// attendance model
+model Attendance {
+  id        String   @id @default(cuid())
+  workerId  String
+  date      DateTime @default(now()) @db.Date
+  isPresent Boolean  @default(true)
+  workHours Float?   @default(8)
+  note      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relation
+  worker Worker @relation(fields: [workerId], references: [id], onDelete: Cascade)
+
+  @@unique([workerId, date])
+  @@map("attendances")
+}
+
+model WeeklySummary {
+  id              String    @id @default(cuid())
+  workerId        String
+  weekStartDate   DateTime  @db.Date
+  weekEndDate     DateTime  @db.Date
+  totalDaysWorked Int
+  totalSalary     Float
+  isPaid          Boolean   @default(false)
+  paidAt          DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  worker      Worker             @relation(fields: [workerId], references: [id], onDelete: Cascade)
+  adjustments SalaryAdjustment[]
+
+  @@unique([workerId, weekStartDate])
+  @@map("weekly_summaries")
+}
+
+model SalaryAdjustment {
+  id              String         @id @default(cuid())
+  weeklySummaryId String
+  type            AdjustmentType
+  amount          Float
+  reason          String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  // Relation
+  weeklySummary WeeklySummary @relation(fields: [weeklySummaryId], references: [id], onDelete: Cascade)
+
+  @@map("salary_adjustments")
+}
