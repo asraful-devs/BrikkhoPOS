@@ -32,6 +32,6 @@ router.delete(
     WeeklySummaryController.DeleteWeeklySummary
 );
 
-router.post('/generate-report', WeeklySummaryController.GenerateWeeklyReport);
+router.post('/weekly-report', WeeklySummaryController.GenerateWeeklyReport);
 
 export const WeeklySummaryRoutes = router;
