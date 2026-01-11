@@ -4,31 +4,44 @@ import { prisma } from '../../../../lib/prisma';
 import ApiError from '../../error/ApiError';
 import { IOptions, PaginationHelper } from '../../helper/paginationHelper';
 
-const createWorker = async (req: Request) => {
+const createAttendance = async (req: Request) => {
     const payload = req.body;
 
-    const result = await prisma.worker.create({
+    const result = await prisma.attendance.create({
         data: payload,
     });
     return result;
 };
 
-const getAllWorkers = async (
+const getAllAttendances = async (
     filters: {
         searchTerm?: string;
-        status?: string;
+        workerId?: string;
+        isPresent?: boolean;
     },
     options: IOptions
 ) => {
     const { page, limit, skip } = PaginationHelper.calculatePagination(options);
 
-    const { searchTerm, status } = filters;
+    const { searchTerm, workerId, isPresent } = filters;
 
-    const andConditions: any[] = [{ isDeleted: false }];
+    const andConditions: any[] = [];
+
+    if (workerId) {
+        andConditions.push({
+            workerId: workerId,
+        });
+    }
+
+    if (isPresent !== undefined) {
+        andConditions.push({
+            isPresent: isPresent,
+        });
+    }
 
     if (searchTerm) {
         andConditions.push({
-            OR: ['status'].map((field) => ({
+            OR: ['note'].map((field) => ({
                 [field]: {
                     contains: searchTerm,
                     mode: 'insensitive',
@@ -37,19 +50,10 @@ const getAllWorkers = async (
         });
     }
 
-    if (status) {
-        andConditions.push({
-            status: {
-                contains: status,
-                mode: 'insensitive',
-            },
-        });
-    }
-
-    const whereConditions: Prisma.WorkerWhereInput =
+    const whereConditions: Prisma.AttendanceWhereInput =
         andConditions.length > 0 ? { AND: andConditions } : {};
 
-    const result = await prisma.worker.findMany({
+    const result = await prisma.attendance.findMany({
         where: whereConditions,
         skip,
         take: limit,
@@ -59,9 +63,12 @@ const getAllWorkers = async (
                 : {
                       createdAt: 'desc',
                   },
+        include: {
+            worker: true,
+        },
     });
 
-    const total = await prisma.worker.count({
+    const total = await prisma.attendance.count({
         where: whereConditions,
     });
 
@@ -75,53 +82,49 @@ const getAllWorkers = async (
     };
 };
 
-const getSingleWorker = async (req: Request) => {
+const getSingleAttendance = async (req: Request) => {
     const { id } = req.params;
 
-    const result = await prisma.worker.findFirst({
-        where: { id, isDeleted: false },
+    const result = await prisma.attendance.findFirst({
+        where: { id },
+        include: {
+            worker: true,
+        },
     });
 
     if (!result) {
-        throw new ApiError(404, 'Worker not found');
+        throw new ApiError(404, 'Attendance not found');
     }
 
     return result;
 };
 
-const updateWorker = async (req: Request) => {
+const updateAttendance = async (req: Request) => {
     const { id } = req.params;
     const payload = req.body;
-    const result = await prisma.worker.update({
-        where: { id, isDeleted: false },
+    const result = await prisma.attendance.update({
+        where: { id },
         data: payload,
+        include: {
+            worker: true,
+        },
     });
     return result;
 };
 
-const softDeleteWorker = async (req: Request) => {
-    const { id } = req.params;
-    const result = await prisma.worker.update({
-        where: { id },
-        data: { isDeleted: true },
-    });
-    return result;
-};
-
-const deleteWorker = async (req: Request) => {
+const deleteAttendance = async (req: Request) => {
     const { id } = req.params;
 
-    const result = await prisma.worker.delete({
+    const result = await prisma.attendance.delete({
         where: { id },
     });
     return result;
 };
 
-export const WorkerService = {
-    createWorker,
-    getAllWorkers,
-    getSingleWorker,
-    updateWorker,
-    softDeleteWorker,
-    deleteWorker,
+export const AttendanceService = {
+    createAttendance,
+    getAllAttendances,
+    getSingleAttendance,
+    updateAttendance,
+    deleteAttendance,
 };

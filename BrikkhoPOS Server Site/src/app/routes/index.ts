@@ -1,4 +1,5 @@
 import express from 'express';
+import { AttendanceRoutes } from '../modules/attendance/attendance.route';
 import { AuthRoutes } from '../modules/auth/auth.route';
 import { UserRoutes } from '../modules/user/user.routes';
 import { WorkerRoutes } from '../modules/worker/worker.routes';
@@ -17,6 +18,10 @@ const moduleRoutes = [
     {
         path: '/worker',
         route: WorkerRoutes,
+    },
+    {
+        path: '/attendance',
+        route: AttendanceRoutes,
     },
 ];
 

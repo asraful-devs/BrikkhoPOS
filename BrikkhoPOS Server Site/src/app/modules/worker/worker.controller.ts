@@ -26,7 +26,8 @@ const GetAllWorkers = catchAsync(async (req: Request, res: Response) => {
         statusCode: status.OK,
         success: true,
         message: 'Workers retrieved successfully',
-        data: result,
+        meta: result.meta,
+        data: result.data,
     });
 });
 
