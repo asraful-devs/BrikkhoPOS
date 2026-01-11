@@ -1,6 +1,7 @@
 import express from 'express';
 import { AttendanceRoutes } from '../modules/attendance/attendance.route';
 import { AuthRoutes } from '../modules/auth/auth.route';
+import { SalaryAdjustmentRoutes } from '../modules/salaryAdjustment/salaryAdjustment.routes';
 import { UserRoutes } from '../modules/user/user.routes';
 import { WeeklySummaryRoutes } from '../modules/weeklySummary/weeklySummary.routes';
 import { WorkerRoutes } from '../modules/worker/worker.routes';
@@ -23,6 +24,10 @@ const moduleRoutes = [
     {
         path: '/attendance',
         route: AttendanceRoutes,
+    },
+    {
+        path: '/salary-adjustment',
+        route: SalaryAdjustmentRoutes,
     },
     {
         path: '/weekly-summary',
