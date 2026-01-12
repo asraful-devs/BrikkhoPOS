@@ -13,7 +13,9 @@ const DashboardRedirect = () => {
         );
     }
 
-    const user = data?.data?.data;
+    const user = data;
+
+    console.log(user, 'hello');
 
     if (!user?.email) {
         return <Navigate to='/login' replace />;
