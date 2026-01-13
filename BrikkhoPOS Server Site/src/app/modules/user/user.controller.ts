@@ -1,5 +1,6 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import status from 'http-status';
+import { JwtPayload } from 'jsonwebtoken';
 import pick from '../../helper/pick';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
@@ -75,6 +76,23 @@ const DeleteUser = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+//get me profile
+
+const GetMyProfile = catchAsync(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async (req: Request, res: Response, next: NextFunction) => {
+        const decodedToken = req.user as JwtPayload;
+        const result = await UserService.getMyProfile(decodedToken.id);
+
+        sendResponse(res, {
+            success: true,
+            statusCode: status.OK,
+            message: 'Your profile retrieved successfully !',
+            data: result,
+        });
+    }
+);
+
 export const UserController = {
     CreateUser,
     GetAllusers,
@@ -82,4 +100,5 @@ export const UserController = {
     UpdateUser,
     SoftDeleteUser,
     DeleteUser,
+    GetMyProfile,
 };
