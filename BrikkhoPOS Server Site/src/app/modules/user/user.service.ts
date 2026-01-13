@@ -92,6 +92,16 @@ const deleteUser = async (id: string) => {
     return deletedUser;
 };
 
+const getMyProfile = async (userId: string) => {
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+            password: false,
+        },
+    });
+    return user;
+};
+
 export const UserService = {
     createUser,
     getAllusers,
@@ -99,4 +109,5 @@ export const UserService = {
     updateUser,
     softDeleteUser,
     deleteUser,
+    getMyProfile,
 };
