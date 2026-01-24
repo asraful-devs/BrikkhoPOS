@@ -36,7 +36,7 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Navigate to='/dashboard/admin/analytics' />,
+                element: <Navigate to='/dashboard/admin/worker-list' />,
             },
             ...generateRoutes(adminSidebarItems),
         ],
