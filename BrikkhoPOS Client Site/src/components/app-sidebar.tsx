@@ -1,5 +1,6 @@
 import { Minus, Plus } from 'lucide-react';
 import * as React from 'react';
+import logo from '/assets/logo.png';
 
 import {
     Collapsible,
@@ -21,11 +22,12 @@ import {
 import { Link } from 'react-router-dom';
 import { useUserInfoQuery } from '../redux/features/auth/auth.api';
 import { adminSidebarItems } from '../routers/adminSitebarItems';
+import { userSidebarItems } from '../routers/userSidebarItems';
 import { ModeToggle } from './common/mode-toggle';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const { data: userInfo, isLoading } = useUserInfoQuery(undefined);
-    const user = userInfo?.data?.data;
+    const user = userInfo?.data;
     const role = user?.role;
 
     // sidebarItems সেট করা role অনুযায়ী
