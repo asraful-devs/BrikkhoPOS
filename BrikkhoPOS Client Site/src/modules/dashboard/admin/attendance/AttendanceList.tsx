@@ -53,39 +53,43 @@ const AttendanceList = () => {
 
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center h-64">
-                <div className="text-muted-foreground">লোড হচ্ছে...</div>
+            <div className='flex items-center justify-center h-64'>
+                <div className='text-muted-foreground'>লোড হচ্ছে...</div>
             </div>
         );
     }
 
     if (error) {
         return (
-            <div className="flex items-center justify-center h-64">
-                <div className="text-destructive">ডেটা লোড করতে সমস্যা হয়েছে</div>
+            <div className='flex items-center justify-center h-64'>
+                <div className='text-destructive'>
+                    ডেটা লোড করতে সমস্যা হয়েছে
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="space-y-6">
+        <div className='space-y-6'>
             <Card>
                 <CardHeader>
-                    <div className="flex items-center justify-between">
+                    <div className='flex items-center justify-between'>
                         <div>
-                            <CardTitle className="text-2xl">হাজিরা তালিকা</CardTitle>
+                            <CardTitle className='text-2xl'>
+                                হাজিরা তালিকা
+                            </CardTitle>
                             <CardDescription>
                                 মোট {attendances.length} টি হাজিরা রেকর্ড
                             </CardDescription>
                         </div>
-                        <Link to="/dashboard/admin/create-attendance">
+                        <Link to='/dashboard/admin/create-attendance'>
                             <Button>হাজিরা দিন</Button>
                         </Link>
                     </div>
                 </CardHeader>
                 <CardContent>
                     {attendances.length === 0 ? (
-                        <div className="text-center py-12 text-muted-foreground">
+                        <div className='text-center py-12 text-muted-foreground'>
                             কোন হাজিরা রেকর্ড পাওয়া যায়নি
                         </div>
                     ) : (
@@ -97,7 +101,7 @@ const AttendanceList = () => {
                                     <TableHead>উপস্থিতি</TableHead>
                                     <TableHead>কাজের সময়</TableHead>
                                     <TableHead>নোট</TableHead>
-                                    <TableHead className="text-right">
+                                    <TableHead className='text-right'>
                                         অ্যাকশন
                                     </TableHead>
                                 </TableRow>
@@ -105,7 +109,7 @@ const AttendanceList = () => {
                             <TableBody>
                                 {attendances.map((attendance: IAttendance) => (
                                     <TableRow key={attendance.id}>
-                                        <TableCell className="font-medium">
+                                        <TableCell className='font-medium'>
                                             {attendance.worker?.name || 'N/A'}
                                         </TableCell>
                                         <TableCell>
@@ -132,33 +136,34 @@ const AttendanceList = () => {
                                         <TableCell>
                                             {attendance.note || '-'}
                                         </TableCell>
-                                        <TableCell className="text-right">
-                                            <div className="flex items-center justify-end gap-2">
+                                        <TableCell className='text-right'>
+                                            <div className='flex items-center justify-end gap-2'>
                                                 <Link
                                                     to={`/dashboard/admin/edit-attendance/${attendance.id}`}
                                                 >
                                                     <Button
-                                                        variant="ghost"
-                                                        size="icon"
+                                                        variant='ghost'
+                                                        size='icon'
                                                     >
-                                                        <Edit className="h-4 w-4" />
+                                                        <Edit className='h-4 w-4' />
                                                     </Button>
                                                 </Link>
 
                                                 <AlertDialog>
                                                     <AlertDialogTrigger asChild>
                                                         <Button
-                                                            variant="ghost"
-                                                            size="icon"
-                                                            className="text-destructive hover:text-destructive"
+                                                            variant='ghost'
+                                                            size='icon'
+                                                            className='text-destructive hover:text-destructive'
                                                         >
-                                                            <Trash2 className="h-4 w-4" />
+                                                            <Trash2 className='h-4 w-4' />
                                                         </Button>
                                                     </AlertDialogTrigger>
                                                     <AlertDialogContent>
                                                         <AlertDialogHeader>
                                                             <AlertDialogTitle>
-                                                                হাজিরা মুছে ফেলুন?
+                                                                হাজিরা মুছে
+                                                                ফেলুন?
                                                             </AlertDialogTitle>
                                                             <AlertDialogDescription>
                                                                 এই হাজিরা রেকর্ড
@@ -176,7 +181,7 @@ const AttendanceList = () => {
                                                                         attendance.id
                                                                     )
                                                                 }
-                                                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                                                className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
                                                             >
                                                                 মুছে ফেলুন
                                                             </AlertDialogAction>

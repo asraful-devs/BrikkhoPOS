@@ -70,53 +70,57 @@ const WorkerList = () => {
 
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center h-64">
-                <div className="text-muted-foreground">লোড হচ্ছে...</div>
+            <div className='flex items-center justify-center h-64'>
+                <div className='text-muted-foreground'>লোড হচ্ছে...</div>
             </div>
         );
     }
 
     if (error) {
         return (
-            <div className="flex items-center justify-center h-64">
-                <div className="text-destructive">ডেটা লোড করতে সমস্যা হয়েছে</div>
+            <div className='flex items-center justify-center h-64'>
+                <div className='text-destructive'>
+                    ডেটা লোড করতে সমস্যা হয়েছে
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="space-y-6">
+        <div className='space-y-6'>
             <Card>
                 <CardHeader>
-                    <div className="flex items-center justify-between">
+                    <div className='flex items-center justify-between'>
                         <div>
-                            <CardTitle className="text-2xl">শ্রমিক তালিকা</CardTitle>
+                            <CardTitle className='text-2xl'>
+                                শ্রমিক তালিকা
+                            </CardTitle>
                             <CardDescription>
                                 মোট {workers.length} জন শ্রমিক
                             </CardDescription>
                         </div>
-                        <Link to="/dashboard/admin/create-worker">
+                        <Link to='/dashboard/admin/create-worker'>
                             <Button>নতুন শ্রমিক যোগ করুন</Button>
                         </Link>
                     </div>
                 </CardHeader>
                 <CardContent>
                     {/* Search */}
-                    <div className="flex items-center gap-4 mb-6">
-                        <div className="relative flex-1 max-w-sm">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <div className='flex items-center gap-4 mb-6'>
+                        <div className='relative flex-1 max-w-sm'>
+                            <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
                             <Input
-                                placeholder="শ্রমিক খুঁজুন..."
+                                placeholder='শ্রমিক খুঁজুন...'
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="pl-10"
+                                className='pl-10'
                             />
                         </div>
                     </div>
 
                     {/* Table */}
                     {workers.length === 0 ? (
-                        <div className="text-center py-12 text-muted-foreground">
+                        <div className='text-center py-12 text-muted-foreground'>
                             কোন শ্রমিক পাওয়া যায়নি
                         </div>
                     ) : (
@@ -127,7 +131,7 @@ const WorkerList = () => {
                                     <TableHead>ফোন</TableHead>
                                     <TableHead>দৈনিক বেতন</TableHead>
                                     <TableHead>স্ট্যাটাস</TableHead>
-                                    <TableHead className="text-right">
+                                    <TableHead className='text-right'>
                                         অ্যাকশন
                                     </TableHead>
                                 </TableRow>
@@ -135,14 +139,15 @@ const WorkerList = () => {
                             <TableBody>
                                 {workers.map((worker: IWorker) => (
                                     <TableRow key={worker.id}>
-                                        <TableCell className="font-medium">
+                                        <TableCell className='font-medium'>
                                             {worker.name}
                                         </TableCell>
                                         <TableCell>
                                             {worker.phoneNumber || '-'}
                                         </TableCell>
                                         <TableCell>
-                                            ৳{worker.dailySalary.toLocaleString()}
+                                            ৳
+                                            {worker.dailySalary.toLocaleString()}
                                         </TableCell>
                                         <TableCell>
                                             <Badge
@@ -157,26 +162,26 @@ const WorkerList = () => {
                                                     : 'নিষ্ক্রিয়'}
                                             </Badge>
                                         </TableCell>
-                                        <TableCell className="text-right">
-                                            <div className="flex items-center justify-end gap-2">
+                                        <TableCell className='text-right'>
+                                            <div className='flex items-center justify-end gap-2'>
                                                 <Link
                                                     to={`/dashboard/admin/worker/${worker.id}`}
                                                 >
                                                     <Button
-                                                        variant="ghost"
-                                                        size="icon"
+                                                        variant='ghost'
+                                                        size='icon'
                                                     >
-                                                        <Eye className="h-4 w-4" />
+                                                        <Eye className='h-4 w-4' />
                                                     </Button>
                                                 </Link>
                                                 <Link
                                                     to={`/dashboard/admin/edit-worker/${worker.id}`}
                                                 >
                                                     <Button
-                                                        variant="ghost"
-                                                        size="icon"
+                                                        variant='ghost'
+                                                        size='icon'
                                                     >
-                                                        <Edit className="h-4 w-4" />
+                                                        <Edit className='h-4 w-4' />
                                                     </Button>
                                                 </Link>
 
@@ -184,22 +189,25 @@ const WorkerList = () => {
                                                 <AlertDialog>
                                                     <AlertDialogTrigger asChild>
                                                         <Button
-                                                            variant="ghost"
-                                                            size="icon"
+                                                            variant='ghost'
+                                                            size='icon'
                                                         >
-                                                            <UserX className="h-4 w-4" />
+                                                            <UserX className='h-4 w-4' />
                                                         </Button>
                                                     </AlertDialogTrigger>
                                                     <AlertDialogContent>
                                                         <AlertDialogHeader>
                                                             <AlertDialogTitle>
-                                                                শ্রমিক নিষ্ক্রিয় করুন?
+                                                                শ্রমিক
+                                                                নিষ্ক্রিয় করুন?
                                                             </AlertDialogTitle>
                                                             <AlertDialogDescription>
-                                                                এই শ্রমিককে নিষ্ক্রিয়
-                                                                করলে তাকে তালিকায়
-                                                                দেখাবে না কিন্তু ডেটা
-                                                                মুছে যাবে না।
+                                                                এই শ্রমিককে
+                                                                নিষ্ক্রিয় করলে
+                                                                তাকে তালিকায়
+                                                                দেখাবে না কিন্তু
+                                                                ডেটা মুছে যাবে
+                                                                না।
                                                             </AlertDialogDescription>
                                                         </AlertDialogHeader>
                                                         <AlertDialogFooter>
@@ -223,22 +231,25 @@ const WorkerList = () => {
                                                 <AlertDialog>
                                                     <AlertDialogTrigger asChild>
                                                         <Button
-                                                            variant="ghost"
-                                                            size="icon"
-                                                            className="text-destructive hover:text-destructive"
+                                                            variant='ghost'
+                                                            size='icon'
+                                                            className='text-destructive hover:text-destructive'
                                                         >
-                                                            <Trash2 className="h-4 w-4" />
+                                                            <Trash2 className='h-4 w-4' />
                                                         </Button>
                                                     </AlertDialogTrigger>
                                                     <AlertDialogContent>
                                                         <AlertDialogHeader>
                                                             <AlertDialogTitle>
-                                                                শ্রমিক মুছে ফেলুন?
+                                                                শ্রমিক মুছে
+                                                                ফেলুন?
                                                             </AlertDialogTitle>
                                                             <AlertDialogDescription>
-                                                                এই শ্রমিককে সম্পূর্ণরূপে
-                                                                মুছে ফেললে তার সব ডেটা
-                                                                চিরতরে হারিয়ে যাবে।
+                                                                এই শ্রমিককে
+                                                                সম্পূর্ণরূপে
+                                                                মুছে ফেললে তার
+                                                                সব ডেটা চিরতরে
+                                                                হারিয়ে যাবে।
                                                             </AlertDialogDescription>
                                                         </AlertDialogHeader>
                                                         <AlertDialogFooter>
@@ -251,7 +262,7 @@ const WorkerList = () => {
                                                                         worker.id
                                                                     )
                                                                 }
-                                                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                                                className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
                                                             >
                                                                 মুছে ফেলুন
                                                             </AlertDialogAction>

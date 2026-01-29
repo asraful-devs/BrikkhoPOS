@@ -28,7 +28,10 @@ export const salaryAdjustmentApi = baseApi.injectEndpoints({
             providesTags: ['SALARY_ADJUSTMENT'],
         }),
 
-        getSingleSalaryAdjustment: builder.query<ISalaryAdjustmentResponse, string>({
+        getSingleSalaryAdjustment: builder.query<
+            ISalaryAdjustmentResponse,
+            string
+        >({
             query: (id) => ({
                 url: `/salary-adjustment/get-single-salary-adjustment/${id}`,
                 method: 'GET',
@@ -48,7 +51,10 @@ export const salaryAdjustmentApi = baseApi.injectEndpoints({
             invalidatesTags: ['SALARY_ADJUSTMENT', 'WEEKLY_SUMMARY'],
         }),
 
-        deleteSalaryAdjustment: builder.mutation<ISalaryAdjustmentResponse, string>({
+        deleteSalaryAdjustment: builder.mutation<
+            ISalaryAdjustmentResponse,
+            string
+        >({
             query: (id) => ({
                 url: `/salary-adjustment/delete-salary-adjustment/${id}`,
                 method: 'DELETE',

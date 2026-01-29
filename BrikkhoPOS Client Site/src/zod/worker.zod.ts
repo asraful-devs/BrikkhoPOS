@@ -1,19 +1,31 @@
 import z from 'zod';
 
 const createWorkerSchema = z.object({
-    name: z.string().min(1, { message: 'নাম আবশ্যক' }),
+    name: z.string().min(1, { message: 'Name is required' }),
     phoneNumber: z.string().optional(),
-    dailySalary: z.coerce.number().min(0, { message: 'দৈনিক বেতন ধনাত্মক হতে হবে' }),
+    dailySalary: z.coerce
+        .number()
+        .min(0, { message: 'Daily salary must be positive' }),
 });
 
 const updateWorkerSchema = z.object({
-    name: z.string().min(1, { message: 'নাম আবশ্যক' }).optional(),
+    name: z.string().min(1, { message: 'Name is required' }).optional(),
     phoneNumber: z.string().optional(),
-    dailySalary: z.coerce.number().min(0, { message: 'দৈনিক বেতন ধনাত্মক হতে হবে' }).optional(),
+    dailySalary: z.coerce
+        .number()
+        .min(0, { message: 'Daily salary must be positive' })
+        .optional(),
     address: z.string().optional(),
     profilePicture: z.string().optional(),
-    age: z.coerce.number().min(0, { message: 'বয়স ধনাত্মক হতে হবে' }).optional(),
-    email: z.string().email({ message: 'সঠিক ইমেইল দিন' }).optional().or(z.literal('')),
+    age: z.coerce
+        .number()
+        .min(0, { message: 'Age must be positive' })
+        .optional(),
+    email: z
+        .string()
+        .email({ message: 'Please provide a valid email' })
+        .optional()
+        .or(z.literal('')),
     status: z.enum(['ACTIVE', 'INACTIVE']).optional(),
 });
 

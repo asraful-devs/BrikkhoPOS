@@ -13,6 +13,13 @@ router.post(
     UserController.CreateUser
 );
 
+// Get my profile - must come before /:id route
+router.get(
+    '/me',
+    checkAuth(...Object.values(Role)),
+    UserController.GetMyProfile
+);
+
 router.get('/', UserController.GetAllusers);
 
 router.get('/:id', UserController.GetUserById);
@@ -26,19 +33,5 @@ router.patch(
 router.patch('/soft-delete-user/:id', UserController.SoftDeleteUser);
 
 router.delete('/delete-user/:id', UserController.DeleteUser);
-
-router.get(
-    '/me',
-    checkAuth(...Object.values(Role)),
-    UserController.GetMyProfile
-);
-
-// router.post('/me', UserController.GetMyProfile);
-
-router.get(
-    '/me',
-    checkAuth(...Object.values(Role)),
-    UserController.GetMyProfile
-);
 
 export const UserRoutes = router;

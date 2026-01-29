@@ -8,7 +8,10 @@ import { baseApi } from '../../baseApi';
 
 export const attendanceApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        createAttendance: builder.mutation<IAttendanceResponse, ICreateAttendance>({
+        createAttendance: builder.mutation<
+            IAttendanceResponse,
+            ICreateAttendance
+        >({
             query: (attendanceData) => ({
                 url: '/attendance/create-attendance',
                 method: 'POST',

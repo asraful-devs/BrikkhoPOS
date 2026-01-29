@@ -96,7 +96,13 @@ const getMyProfile = async (userId: string) => {
     const user = await prisma.user.findUnique({
         where: { id: userId },
         select: {
-            password: false,
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+            status: true,
+            createdAt: true,
+            updatedAt: true,
         },
     });
     return user;

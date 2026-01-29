@@ -1,16 +1,22 @@
 import z from 'zod';
 
 const createAttendanceSchema = z.object({
-    workerId: z.string().min(1, { message: 'শ্রমিক নির্বাচন আবশ্যক' }),
+    workerId: z.string().min(1, { message: 'Worker selection is required' }),
     date: z.string().optional(),
     isPresent: z.boolean().default(true),
-    workHours: z.coerce.number().min(0, { message: 'কাজের সময় ধনাত্মক হতে হবে' }).default(8),
+    workHours: z.coerce
+        .number()
+        .min(0, { message: 'Work hours must be positive' })
+        .default(8),
     note: z.string().optional(),
 });
 
 const updateAttendanceSchema = z.object({
     isPresent: z.boolean().optional(),
-    workHours: z.coerce.number().min(0, { message: 'কাজের সময় ধনাত্মক হতে হবে' }).optional(),
+    workHours: z.coerce
+        .number()
+        .min(0, { message: 'Work hours must be positive' })
+        .optional(),
     note: z.string().optional(),
 });
 

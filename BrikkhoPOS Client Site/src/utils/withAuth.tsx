@@ -16,7 +16,10 @@ export const withAuth = (Component: ComponentType, requiredRole?: TRole) => {
             );
         }
 
-        // console.log({ requiredRole, userRole: data?.data?.data?.role });
+        console.log(
+            { requiredRole, userRole: data?.data?.data?.role },
+            'withAuth'
+        );
 
         if (!isLoading && !data?.data?.data?.email) {
             return <Navigate to='/login' />;

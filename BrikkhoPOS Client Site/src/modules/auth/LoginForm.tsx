@@ -37,7 +37,11 @@ export function LoginForm({
 
     const onSubmit = async (data: z.infer<typeof authZod.loginSchema>) => {
         try {
-            await login(data).unwrap();
+            const res = await login(data).unwrap();
+
+            if (res.data.accessToken) {
+                localStorage.setItem('accessToken', res?.data?.accessToken);
+            }
 
             toast.success('Login successful');
             navigate('/dashboard');

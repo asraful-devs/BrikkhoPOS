@@ -35,7 +35,10 @@ import { Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
-const typeLabels: Record<string, { label: string; variant: 'success' | 'destructive' | 'warning' }> = {
+const typeLabels: Record<
+    string,
+    { label: string; variant: 'success' | 'destructive' | 'warning' }
+> = {
     BONUS: { label: 'বোনাস', variant: 'success' },
     OVERTIME: { label: 'ওভারটাইম', variant: 'success' },
     DEDUCTION: { label: 'কর্তন', variant: 'destructive' },
@@ -60,39 +63,43 @@ const SalaryAdjustmentList = () => {
 
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center h-64">
-                <div className="text-muted-foreground">লোড হচ্ছে...</div>
+            <div className='flex items-center justify-center h-64'>
+                <div className='text-muted-foreground'>লোড হচ্ছে...</div>
             </div>
         );
     }
 
     if (error) {
         return (
-            <div className="flex items-center justify-center h-64">
-                <div className="text-destructive">ডেটা লোড করতে সমস্যা হয়েছে</div>
+            <div className='flex items-center justify-center h-64'>
+                <div className='text-destructive'>
+                    ডেটা লোড করতে সমস্যা হয়েছে
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="space-y-6">
+        <div className='space-y-6'>
             <Card>
                 <CardHeader>
-                    <div className="flex items-center justify-between">
+                    <div className='flex items-center justify-between'>
                         <div>
-                            <CardTitle className="text-2xl">বেতন সমন্বয়</CardTitle>
+                            <CardTitle className='text-2xl'>
+                                বেতন সমন্বয়
+                            </CardTitle>
                             <CardDescription>
                                 মোট {adjustments.length} টি সমন্বয়
                             </CardDescription>
                         </div>
-                        <Link to="/dashboard/admin/add-salary-adjustment">
+                        <Link to='/dashboard/admin/add-salary-adjustment'>
                             <Button>নতুন সমন্বয়</Button>
                         </Link>
                     </div>
                 </CardHeader>
                 <CardContent>
                     {adjustments.length === 0 ? (
-                        <div className="text-center py-12 text-muted-foreground">
+                        <div className='text-center py-12 text-muted-foreground'>
                             কোন সমন্বয় পাওয়া যায়নি
                         </div>
                     ) : (
@@ -104,7 +111,7 @@ const SalaryAdjustmentList = () => {
                                     <TableHead>পরিমাণ</TableHead>
                                     <TableHead>কারণ</TableHead>
                                     <TableHead>তারিখ</TableHead>
-                                    <TableHead className="text-right">
+                                    <TableHead className='text-right'>
                                         অ্যাকশন
                                     </TableHead>
                                 </TableRow>
@@ -113,7 +120,7 @@ const SalaryAdjustmentList = () => {
                                 {adjustments.map(
                                     (adjustment: ISalaryAdjustment) => (
                                         <TableRow key={adjustment.id}>
-                                            <TableCell className="font-mono text-xs">
+                                            <TableCell className='font-mono text-xs'>
                                                 {adjustment.weeklySummaryId.slice(
                                                     0,
                                                     8
@@ -123,18 +130,22 @@ const SalaryAdjustmentList = () => {
                                             <TableCell>
                                                 <Badge
                                                     variant={
-                                                        typeLabels[adjustment.type]
-                                                            ?.variant || 'default'
+                                                        typeLabels[
+                                                            adjustment.type
+                                                        ]?.variant || 'default'
                                                     }
                                                 >
                                                     {typeLabels[adjustment.type]
-                                                        ?.label || adjustment.type}
+                                                        ?.label ||
+                                                        adjustment.type}
                                                 </Badge>
                                             </TableCell>
                                             <TableCell
                                                 className={`font-semibold ${
-                                                    adjustment.type === 'BONUS' ||
-                                                    adjustment.type === 'OVERTIME'
+                                                    adjustment.type ===
+                                                        'BONUS' ||
+                                                    adjustment.type ===
+                                                        'OVERTIME'
                                                         ? 'text-green-600'
                                                         : 'text-red-600'
                                                 }`}
@@ -143,7 +154,8 @@ const SalaryAdjustmentList = () => {
                                                 adjustment.type === 'OVERTIME'
                                                     ? '+'
                                                     : '-'}
-                                                ৳{adjustment.amount.toLocaleString()}
+                                                ৳
+                                                {adjustment.amount.toLocaleString()}
                                             </TableCell>
                                             <TableCell>
                                                 {adjustment.reason || '-'}
@@ -153,25 +165,27 @@ const SalaryAdjustmentList = () => {
                                                     adjustment.createdAt
                                                 ).toLocaleDateString('bn-BD')}
                                             </TableCell>
-                                            <TableCell className="text-right">
+                                            <TableCell className='text-right'>
                                                 <AlertDialog>
                                                     <AlertDialogTrigger asChild>
                                                         <Button
-                                                            variant="ghost"
-                                                            size="icon"
-                                                            className="text-destructive hover:text-destructive"
+                                                            variant='ghost'
+                                                            size='icon'
+                                                            className='text-destructive hover:text-destructive'
                                                         >
-                                                            <Trash2 className="h-4 w-4" />
+                                                            <Trash2 className='h-4 w-4' />
                                                         </Button>
                                                     </AlertDialogTrigger>
                                                     <AlertDialogContent>
                                                         <AlertDialogHeader>
                                                             <AlertDialogTitle>
-                                                                সমন্বয় মুছে ফেলুন?
+                                                                সমন্বয় মুছে
+                                                                ফেলুন?
                                                             </AlertDialogTitle>
                                                             <AlertDialogDescription>
-                                                                এই সমন্বয় মুছে ফেললে
-                                                                তা আর ফেরত পাবেন না।
+                                                                এই সমন্বয় মুছে
+                                                                ফেললে তা আর ফেরত
+                                                                পাবেন না।
                                                             </AlertDialogDescription>
                                                         </AlertDialogHeader>
                                                         <AlertDialogFooter>
@@ -184,7 +198,7 @@ const SalaryAdjustmentList = () => {
                                                                         adjustment.id
                                                                     )
                                                                 }
-                                                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                                                className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
                                                             >
                                                                 মুছে ফেলুন
                                                             </AlertDialogAction>
