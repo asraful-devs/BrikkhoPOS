@@ -47,11 +47,11 @@ export function RegisterForm({
         try {
             await register(userInfo).unwrap();
 
-            toast.success('User created successfully');
+            toast.success('ব্যবহারকারী সফলভাবে তৈরি হয়েছে');
             navigate('/login');
         } catch (error) {
             console.error(error);
-            toast.error('Registration failed. Please try again.');
+            toast.error('নিবন্ধন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।');
         }
     };
 

@@ -40,13 +40,15 @@ const WeeklyReport = () => {
         useGetWorkersQuery();
     const [reportData, setReportData] = useState<any>(null);
 
-    const workers = workersData?.data?.data || [];
+    const workers = workersData?.data || [];
 
     // Get current week dates
     const today = new Date();
     const dayOfWeek = today.getDay();
     const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+    startOfWeek.setDate(
+        today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1)
+    );
     const endOfWeek = new Date(startOfWeek);
     endOfWeek.setDate(startOfWeek.getDate() + 6);
 
@@ -71,10 +73,12 @@ const WeeklyReport = () => {
     };
 
     return (
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className='max-w-4xl mx-auto space-y-6'>
             <Card>
                 <CardHeader>
-                    <CardTitle className="text-2xl">সাপ্তাহিক রিপোর্ট</CardTitle>
+                    <CardTitle className='text-2xl'>
+                        সাপ্তাহিক রিপোর্ট
+                    </CardTitle>
                     <CardDescription>
                         একজন শ্রমিকের সাপ্তাহিক কাজের রিপোর্ট জেনারেট করুন
                     </CardDescription>
@@ -83,14 +87,16 @@ const WeeklyReport = () => {
                     <Form {...form}>
                         <form
                             onSubmit={form.handleSubmit(onSubmit)}
-                            className="space-y-6"
+                            className='space-y-6'
                         >
                             <FormField
                                 control={form.control}
-                                name="workerId"
+                                name='workerId'
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>শ্রমিক নির্বাচন করুন *</FormLabel>
+                                        <FormLabel>
+                                            শ্রমিক নির্বাচন করুন *
+                                        </FormLabel>
                                         <Select
                                             onValueChange={field.onChange}
                                             defaultValue={field.value}
@@ -98,7 +104,7 @@ const WeeklyReport = () => {
                                         >
                                             <FormControl>
                                                 <SelectTrigger>
-                                                    <SelectValue placeholder="শ্রমিক নির্বাচন করুন" />
+                                                    <SelectValue placeholder='শ্রমিক নির্বাচন করুন' />
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
@@ -112,7 +118,7 @@ const WeeklyReport = () => {
                                                 ))}
                                             </SelectContent>
                                         </Select>
-                                        <FormDescription className="sr-only">
+                                        <FormDescription className='sr-only'>
                                             যে শ্রমিকের রিপোর্ট দেখতে চান
                                         </FormDescription>
                                         <FormMessage />
@@ -120,15 +126,15 @@ const WeeklyReport = () => {
                                 )}
                             />
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className='grid grid-cols-2 gap-4'>
                                 <FormField
                                     control={form.control}
-                                    name="weekStartDate"
+                                    name='weekStartDate'
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>সপ্তাহ শুরু *</FormLabel>
                                             <FormControl>
-                                                <Input type="date" {...field} />
+                                                <Input type='date' {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -137,12 +143,12 @@ const WeeklyReport = () => {
 
                                 <FormField
                                     control={form.control}
-                                    name="weekEndDate"
+                                    name='weekEndDate'
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>সপ্তাহ শেষ *</FormLabel>
                                             <FormControl>
-                                                <Input type="date" {...field} />
+                                                <Input type='date' {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -150,7 +156,7 @@ const WeeklyReport = () => {
                                 />
                             </div>
 
-                            <Button type="submit" disabled={isLoading}>
+                            <Button type='submit' disabled={isLoading}>
                                 {isLoading
                                     ? 'জেনারেট হচ্ছে...'
                                     : 'রিপোর্ট জেনারেট করুন'}
@@ -170,39 +176,39 @@ const WeeklyReport = () => {
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-950">
-                                <div className="text-sm text-muted-foreground">
+                        <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
+                            <div className='p-4 rounded-lg bg-blue-50 dark:bg-blue-950'>
+                                <div className='text-sm text-muted-foreground'>
                                     মোট কাজের দিন
                                 </div>
-                                <div className="text-2xl font-bold text-blue-600">
+                                <div className='text-2xl font-bold text-blue-600'>
                                     {reportData.totalDaysWorked} দিন
                                 </div>
                             </div>
 
-                            <div className="p-4 rounded-lg bg-green-50 dark:bg-green-950">
-                                <div className="text-sm text-muted-foreground">
+                            <div className='p-4 rounded-lg bg-green-50 dark:bg-green-950'>
+                                <div className='text-sm text-muted-foreground'>
                                     মোট বেতন
                                 </div>
-                                <div className="text-2xl font-bold text-green-600">
+                                <div className='text-2xl font-bold text-green-600'>
                                     ৳{reportData.totalSalary?.toLocaleString()}
                                 </div>
                             </div>
 
-                            <div className="p-4 rounded-lg bg-purple-50 dark:bg-purple-950">
-                                <div className="text-sm text-muted-foreground">
+                            <div className='p-4 rounded-lg bg-purple-50 dark:bg-purple-950'>
+                                <div className='text-sm text-muted-foreground'>
                                     পরিশোধ অবস্থা
                                 </div>
-                                <div className="text-2xl font-bold text-purple-600">
+                                <div className='text-2xl font-bold text-purple-600'>
                                     {reportData.isPaid ? 'পরিশোধিত' : 'বকেয়া'}
                                 </div>
                             </div>
 
-                            <div className="p-4 rounded-lg bg-orange-50 dark:bg-orange-950">
-                                <div className="text-sm text-muted-foreground">
+                            <div className='p-4 rounded-lg bg-orange-50 dark:bg-orange-950'>
+                                <div className='text-sm text-muted-foreground'>
                                     সমন্বয়
                                 </div>
-                                <div className="text-2xl font-bold text-orange-600">
+                                <div className='text-2xl font-bold text-orange-600'>
                                     {reportData.adjustments?.length || 0} টি
                                 </div>
                             </div>

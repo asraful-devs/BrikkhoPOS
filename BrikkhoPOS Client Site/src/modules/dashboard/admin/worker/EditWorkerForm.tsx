@@ -78,11 +78,11 @@ const EditWorkerForm = () => {
     const onSubmit = async (data: FormData) => {
         try {
             await updateWorker({ id: id!, data }).unwrap();
-            toast.success('Worker information updated successfully');
+            toast.success('কর্মীর তথ্য সফলভাবে আপডেট করা হয়েছে');
             navigate('/dashboard/admin/worker-list');
         } catch (error) {
             console.error(error);
-            toast.error('Failed to update worker');
+            toast.error('কর্মীর তথ্য আপডেট করতে ব্যর্থ হয়েছে');
         }
     };
 

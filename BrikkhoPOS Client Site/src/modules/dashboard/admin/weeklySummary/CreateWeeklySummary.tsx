@@ -36,18 +36,21 @@ import { z } from 'zod';
 type FormData = z.infer<typeof weeklySummaryZod.createWeeklySummarySchema>;
 
 const CreateWeeklySummary = () => {
-    const [createWeeklySummary, { isLoading }] = useCreateWeeklySummaryMutation();
+    const [createWeeklySummary, { isLoading }] =
+        useCreateWeeklySummaryMutation();
     const { data: workersData, isLoading: isLoadingWorkers } =
         useGetWorkersQuery();
     const navigate = useNavigate();
 
-    const workers = workersData?.data?.data || [];
+    const workers = workersData?.data || [];
 
     // Get current week dates
     const today = new Date();
     const dayOfWeek = today.getDay();
     const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+    startOfWeek.setDate(
+        today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1)
+    );
     const endOfWeek = new Date(startOfWeek);
     endOfWeek.setDate(startOfWeek.getDate() + 6);
 
@@ -73,10 +76,12 @@ const CreateWeeklySummary = () => {
     };
 
     return (
-        <div className="max-w-2xl mx-auto">
+        <div className='max-w-2xl mx-auto'>
             <Card>
                 <CardHeader>
-                    <CardTitle className="text-2xl">সাপ্তাহিক সারাংশ তৈরি</CardTitle>
+                    <CardTitle className='text-2xl'>
+                        সাপ্তাহিক সারাংশ তৈরি
+                    </CardTitle>
                     <CardDescription>
                         শ্রমিকের সাপ্তাহিক কাজের সারাংশ তৈরি করুন
                     </CardDescription>
@@ -85,14 +90,16 @@ const CreateWeeklySummary = () => {
                     <Form {...form}>
                         <form
                             onSubmit={form.handleSubmit(onSubmit)}
-                            className="space-y-6"
+                            className='space-y-6'
                         >
                             <FormField
                                 control={form.control}
-                                name="workerId"
+                                name='workerId'
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>শ্রমিক নির্বাচন করুন *</FormLabel>
+                                        <FormLabel>
+                                            শ্রমিক নির্বাচন করুন *
+                                        </FormLabel>
                                         <Select
                                             onValueChange={field.onChange}
                                             defaultValue={field.value}
@@ -100,7 +107,7 @@ const CreateWeeklySummary = () => {
                                         >
                                             <FormControl>
                                                 <SelectTrigger>
-                                                    <SelectValue placeholder="শ্রমিক নির্বাচন করুন" />
+                                                    <SelectValue placeholder='শ্রমিক নির্বাচন করুন' />
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
@@ -114,23 +121,24 @@ const CreateWeeklySummary = () => {
                                                 ))}
                                             </SelectContent>
                                         </Select>
-                                        <FormDescription className="sr-only">
-                                            যে শ্রমিকের সাপ্তাহিক সারাংশ তৈরি করতে চান
+                                        <FormDescription className='sr-only'>
+                                            যে শ্রমিকের সাপ্তাহিক সারাংশ তৈরি
+                                            করতে চান
                                         </FormDescription>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className='grid grid-cols-2 gap-4'>
                                 <FormField
                                     control={form.control}
-                                    name="weekStartDate"
+                                    name='weekStartDate'
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>সপ্তাহ শুরু *</FormLabel>
                                             <FormControl>
-                                                <Input type="date" {...field} />
+                                                <Input type='date' {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -139,12 +147,12 @@ const CreateWeeklySummary = () => {
 
                                 <FormField
                                     control={form.control}
-                                    name="weekEndDate"
+                                    name='weekEndDate'
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>সপ্তাহ শেষ *</FormLabel>
                                             <FormControl>
-                                                <Input type="date" {...field} />
+                                                <Input type='date' {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -154,16 +162,16 @@ const CreateWeeklySummary = () => {
 
                             <FormField
                                 control={form.control}
-                                name="isPaid"
+                                name='isPaid'
                                 render={({ field }) => (
-                                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                                    <FormItem className='flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4'>
                                         <FormControl>
                                             <Checkbox
                                                 checked={field.value}
                                                 onCheckedChange={field.onChange}
                                             />
                                         </FormControl>
-                                        <div className="space-y-1 leading-none">
+                                        <div className='space-y-1 leading-none'>
                                             <FormLabel>পরিশোধিত</FormLabel>
                                             <FormDescription>
                                                 বেতন পরিশোধ করা হয়েছে কিনা
@@ -173,17 +181,19 @@ const CreateWeeklySummary = () => {
                                 )}
                             />
 
-                            <div className="flex gap-4">
+                            <div className='flex gap-4'>
                                 <Button
-                                    type="submit"
-                                    className="flex-1"
+                                    type='submit'
+                                    className='flex-1'
                                     disabled={isLoading}
                                 >
-                                    {isLoading ? 'তৈরি হচ্ছে...' : 'সারাংশ তৈরি করুন'}
+                                    {isLoading
+                                        ? 'তৈরি হচ্ছে...'
+                                        : 'সারাংশ তৈরি করুন'}
                                 </Button>
                                 <Button
-                                    type="button"
-                                    variant="outline"
+                                    type='button'
+                                    variant='outline'
                                     onClick={() => navigate(-1)}
                                 >
                                     বাতিল

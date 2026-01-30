@@ -41,7 +41,7 @@ const CreateAttendance = () => {
         useGetWorkersQuery();
     const navigate = useNavigate();
 
-    const workers = workersData?.data?.data || [];
+    const workers = workersData?.data || [];
 
     const form = useForm<FormData>({
         resolver: zodResolver(attendanceZod.createAttendanceSchema),
@@ -66,10 +66,10 @@ const CreateAttendance = () => {
     };
 
     return (
-        <div className="max-w-2xl mx-auto">
+        <div className='max-w-2xl mx-auto'>
             <Card>
                 <CardHeader>
-                    <CardTitle className="text-2xl">হাজিরা দিন</CardTitle>
+                    <CardTitle className='text-2xl'>হাজিরা দিন</CardTitle>
                     <CardDescription>
                         শ্রমিকের দৈনিক হাজিরা এন্ট্রি করুন
                     </CardDescription>
@@ -78,14 +78,16 @@ const CreateAttendance = () => {
                     <Form {...form}>
                         <form
                             onSubmit={form.handleSubmit(onSubmit)}
-                            className="space-y-6"
+                            className='space-y-6'
                         >
                             <FormField
                                 control={form.control}
-                                name="workerId"
+                                name='workerId'
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>শ্রমিক নির্বাচন করুন *</FormLabel>
+                                        <FormLabel>
+                                            শ্রমিক নির্বাচন করুন *
+                                        </FormLabel>
                                         <Select
                                             onValueChange={field.onChange}
                                             defaultValue={field.value}
@@ -93,7 +95,7 @@ const CreateAttendance = () => {
                                         >
                                             <FormControl>
                                                 <SelectTrigger>
-                                                    <SelectValue placeholder="শ্রমিক নির্বাচন করুন" />
+                                                    <SelectValue placeholder='শ্রমিক নির্বাচন করুন' />
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
@@ -107,7 +109,7 @@ const CreateAttendance = () => {
                                                 ))}
                                             </SelectContent>
                                         </Select>
-                                        <FormDescription className="sr-only">
+                                        <FormDescription className='sr-only'>
                                             যে শ্রমিকের হাজিরা দিতে চান
                                         </FormDescription>
                                         <FormMessage />
@@ -117,12 +119,12 @@ const CreateAttendance = () => {
 
                             <FormField
                                 control={form.control}
-                                name="date"
+                                name='date'
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>তারিখ</FormLabel>
                                         <FormControl>
-                                            <Input type="date" {...field} />
+                                            <Input type='date' {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -131,16 +133,16 @@ const CreateAttendance = () => {
 
                             <FormField
                                 control={form.control}
-                                name="isPresent"
+                                name='isPresent'
                                 render={({ field }) => (
-                                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                                    <FormItem className='flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4'>
                                         <FormControl>
                                             <Checkbox
                                                 checked={field.value}
                                                 onCheckedChange={field.onChange}
                                             />
                                         </FormControl>
-                                        <div className="space-y-1 leading-none">
+                                        <div className='space-y-1 leading-none'>
                                             <FormLabel>উপস্থিত</FormLabel>
                                             <FormDescription>
                                                 শ্রমিক আজ কাজে এসেছে কিনা
@@ -152,17 +154,19 @@ const CreateAttendance = () => {
 
                             <FormField
                                 control={form.control}
-                                name="workHours"
+                                name='workHours'
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>কাজের সময় (ঘণ্টা)</FormLabel>
+                                        <FormLabel>
+                                            কাজের সময় (ঘণ্টা)
+                                        </FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="8"
-                                                type="number"
-                                                min="0"
-                                                max="24"
-                                                step="0.5"
+                                                placeholder='8'
+                                                type='number'
+                                                min='0'
+                                                max='24'
+                                                step='0.5'
                                                 {...field}
                                             />
                                         </FormControl>
@@ -173,13 +177,13 @@ const CreateAttendance = () => {
 
                             <FormField
                                 control={form.control}
-                                name="note"
+                                name='note'
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>নোট</FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="কোন বিশেষ নোট থাকলে লিখুন"
+                                                placeholder='কোন বিশেষ নোট থাকলে লিখুন'
                                                 {...field}
                                             />
                                         </FormControl>
@@ -188,17 +192,19 @@ const CreateAttendance = () => {
                                 )}
                             />
 
-                            <div className="flex gap-4">
+                            <div className='flex gap-4'>
                                 <Button
-                                    type="submit"
-                                    className="flex-1"
+                                    type='submit'
+                                    className='flex-1'
                                     disabled={isLoading}
                                 >
-                                    {isLoading ? 'দেওয়া হচ্ছে...' : 'হাজিরা দিন'}
+                                    {isLoading
+                                        ? 'দেওয়া হচ্ছে...'
+                                        : 'হাজিরা দিন'}
                                 </Button>
                                 <Button
-                                    type="button"
-                                    variant="outline"
+                                    type='button'
+                                    variant='outline'
                                     onClick={() => navigate(-1)}
                                 >
                                     বাতিল

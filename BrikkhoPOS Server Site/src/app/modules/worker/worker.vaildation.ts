@@ -16,7 +16,11 @@ const workerUpdateZodSchema = z.object({
     address: z.string().optional(),
     profilePicture: z.string().optional(),
     age: z.number().min(0, 'Age must be a positive number').optional(),
-    email: z.string().email('Invalid email address').optional(),
+    email: z
+        .string()
+        .email('Invalid email address')
+        .optional()
+        .or(z.literal('')),
     status: z.enum(['ACTIVE', 'INACTIVE']).optional(),
 });
 

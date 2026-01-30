@@ -92,6 +92,12 @@ const getSingleWorker = async (req: Request) => {
 const updateWorker = async (req: Request) => {
     const { id } = req.params;
     const payload = req.body;
+
+    // Convert empty string email to null to avoid unique constraint violation
+    if (payload.email === '') {
+        payload.email = null;
+    }
+
     const result = await prisma.worker.update({
         where: { id, isDeleted: false },
         data: payload,

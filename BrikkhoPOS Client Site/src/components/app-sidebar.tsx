@@ -69,21 +69,31 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                     {item.items?.length ? (
                                         <CollapsibleContent>
                                             <SidebarMenuSub>
-                                                {item.items.map((subItem) => (
-                                                    <SidebarMenuSubItem
-                                                        key={subItem.title}
-                                                    >
-                                                        <SidebarMenuSubButton
-                                                            asChild
+                                                {item.items
+                                                    .filter(
+                                                        (subItem) =>
+                                                            subItem.showInSidebar !==
+                                                            false
+                                                    )
+                                                    .map((subItem) => (
+                                                        <SidebarMenuSubItem
+                                                            key={subItem.title}
                                                         >
-                                                            <Link
-                                                                to={subItem.url}
+                                                            <SidebarMenuSubButton
+                                                                asChild
                                                             >
-                                                                {subItem.title}
-                                                            </Link>
-                                                        </SidebarMenuSubButton>
-                                                    </SidebarMenuSubItem>
-                                                ))}
+                                                                <Link
+                                                                    to={
+                                                                        subItem.url
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        subItem.title
+                                                                    }
+                                                                </Link>
+                                                            </SidebarMenuSubButton>
+                                                        </SidebarMenuSubItem>
+                                                    ))}
                                             </SidebarMenuSub>
                                         </CollapsibleContent>
                                     ) : null}

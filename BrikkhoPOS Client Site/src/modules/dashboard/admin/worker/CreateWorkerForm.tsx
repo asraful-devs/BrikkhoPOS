@@ -44,11 +44,11 @@ const CreateWorkerForm = () => {
     const onSubmit = async (data: FormData) => {
         try {
             await createWorker(data).unwrap();
-            toast.success('Worker created successfully');
+            toast.success('কর্মী সফলভাবে তৈরি করা হয়েছে');
             navigate('/dashboard/admin/worker-list');
         } catch (error) {
             console.error(error);
-            toast.error('Failed to create worker');
+            toast.error('কর্মী তৈরি করতে ব্যর্থ হয়েছে');
         }
     };
 

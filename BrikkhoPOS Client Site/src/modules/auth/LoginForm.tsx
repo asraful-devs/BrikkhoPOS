@@ -43,11 +43,11 @@ export function LoginForm({
                 localStorage.setItem('accessToken', res?.data?.accessToken);
             }
 
-            toast.success('Login successful');
+            toast.success('সফলভাবে লগইন হয়েছে');
             navigate('/dashboard');
         } catch (error) {
             console.error(error);
-            toast.error('Login failed. Please check your credentials.');
+            toast.error('লগইন ব্যর্থ হয়েছে। আপনার তথ্য যাচাই করুন।');
         }
     };
 

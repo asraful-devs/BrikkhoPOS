@@ -18,7 +18,6 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import {
     Table,
     TableBody,
@@ -34,38 +33,34 @@ import {
 } from '@/redux/features/worker/worker.api';
 import type { IWorker } from '@/types/worker.types';
 import { motion } from 'framer-motion';
-import { Edit, Eye, Loader2, Plus, Search, Trash2, UserX } from 'lucide-react';
-import { useState } from 'react';
+import { Edit, Eye, Loader2, Plus, Trash2, UserX } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
 const WorkerList = () => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const { data, isLoading, error } = useGetWorkersQuery({
-        searchTerm,
-    });
+    const { data, isLoading, error } = useGetWorkersQuery({});
     const [softDeleteWorker] = useSoftDeleteWorkerMutation();
     const [deleteWorker] = useDeleteWorkerMutation();
 
-    const workers = data?.data?.data || [];
+    const workers: IWorker[] = data?.data || [];
 
     const handleSoftDelete = async (id: string) => {
         try {
             await softDeleteWorker(id).unwrap();
-            toast.success('Worker deactivated successfully');
+            toast.success('কর্মী সফলভাবে নিষ্ক্রিয় করা হয়েছে');
         } catch (error) {
             console.error(error);
-            toast.error('Failed to deactivate worker');
+            toast.error('কর্মী নিষ্ক্রিয় করতে ব্যর্থ হয়েছে');
         }
     };
 
     const handleDelete = async (id: string) => {
         try {
             await deleteWorker(id).unwrap();
-            toast.success('Worker deleted permanently');
+            toast.success('কর্মী স্থায়ীভাবে মুছে ফেলা হয়েছে');
         } catch (error) {
             console.error(error);
-            toast.error('Failed to delete worker');
+            toast.error('কর্মী মুছে ফেলতে ব্যর্থ হয়েছে');
         }
     };
 
@@ -124,35 +119,18 @@ const WorkerList = () => {
                     </div>
                 </CardHeader>
                 <CardContent>
-                    {/* Search */}
-                    <div className='flex items-center gap-4 mb-6'>
-                        <div className='relative flex-1 max-w-sm'>
-                            <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
-                            <Input
-                                placeholder='কর্মী খুঁজুন...'
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className='pl-9'
-                            />
-                        </div>
-                    </div>
-
                     {/* Table */}
                     {workers.length === 0 ? (
                         <div className='text-center py-12'>
                             <p className='text-muted-foreground mb-4'>
-                                {searchTerm
-                                    ? 'আপনার অনুসন্ধান অনুযায়ী কোন কর্মী পাওয়া যায়নি'
-                                    : 'এখনো কোন কর্মী যোগ করা হয়নি'}
+                                এখনো কোন কর্মী যোগ করা হয়নি
                             </p>
-                            {!searchTerm && (
-                                <Link to='/dashboard/admin/create-worker'>
-                                    <Button>
-                                        <Plus className='mr-2 h-4 w-4' />
-                                        প্রথম কর্মী যোগ করুন
-                                    </Button>
-                                </Link>
-                            )}
+                            <Link to='/dashboard/admin/create-worker'>
+                                <Button>
+                                    <Plus className='mr-2 h-4 w-4' />
+                                    প্রথম কর্মী যোগ করুন
+                                </Button>
+                            </Link>
                         </div>
                     ) : (
                         <div className='overflow-x-auto rounded-lg border'>

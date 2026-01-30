@@ -16,7 +16,6 @@ export interface IWorker {
 }
 
 export interface IWorkerFilters {
-    searchTerm?: string;
     status?: TActiveStatus;
     page?: number;
     limit?: number;

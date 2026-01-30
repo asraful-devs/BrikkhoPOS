@@ -8,5 +8,6 @@ export interface ISidebarItem {
         title: string;
         url: string;
         component: ComponentType;
+        showInSidebar?: boolean;
     }[];
 }

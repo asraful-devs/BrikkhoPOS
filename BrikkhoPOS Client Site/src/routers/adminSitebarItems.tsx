@@ -31,11 +31,13 @@ export const adminSidebarItems: ISidebarItem[] = [
                 title: 'কর্মী সম্পাদনা',
                 url: '/dashboard/admin/edit-worker/:id',
                 component: EditWorkerForm,
+                showInSidebar: false,
             },
             {
                 title: 'কর্মীর বিস্তারিত',
                 url: '/dashboard/admin/worker/:id',
                 component: WorkerDetails,
+                showInSidebar: false,
             },
         ],
     },
