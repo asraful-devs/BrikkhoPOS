@@ -3,10 +3,10 @@ import type { ISidebarItem } from '../types';
 
 export const userSidebarItems: ISidebarItem[] = [
     {
-        title: 'Dashboard',
+        title: 'ড্যাশবোর্ড',
         items: [
             {
-                title: 'Main',
+                title: 'প্রধান',
                 url: '/dashboard/user/main',
                 component: UserDashboard,
             },

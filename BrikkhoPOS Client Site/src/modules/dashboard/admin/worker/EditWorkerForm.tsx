@@ -92,7 +92,7 @@ const EditWorkerForm = () => {
                 <div className='text-center'>
                     <Loader2 className='h-8 w-8 animate-spin mx-auto mb-4 text-muted-foreground' />
                     <p className='text-sm text-muted-foreground'>
-                        Loading worker data...
+                        কর্মীর তথ্য লোড হচ্ছে...
                     </p>
                 </div>
             </div>
@@ -104,14 +104,14 @@ const EditWorkerForm = () => {
             <div className='flex items-center justify-center min-h-100'>
                 <div className='text-center'>
                     <h2 className='text-lg font-semibold mb-2'>
-                        Worker Not Found
+                        কর্মী পাওয়া যায়নি
                     </h2>
                     <p className='text-sm text-muted-foreground mb-4'>
-                        The requested worker could not be located
+                        অনুরোধিত কর্মীর অবস্থান নির্ণয় করা যায়নি
                     </p>
                     <Button variant='outline' onClick={() => navigate(-1)}>
                         <ArrowLeft className='mr-2 h-4 w-4' />
-                        Go Back
+                        ফিরে যান
                     </Button>
                 </div>
             </div>
@@ -131,25 +131,23 @@ const EditWorkerForm = () => {
                 className='mb-6'
             >
                 <ArrowLeft className='mr-2 h-4 w-4' />
-                Go Back
+                ফিরে যান
             </Button>
 
             <div className='mb-6'>
                 <h1 className='text-3xl font-bold text-foreground'>
-                    Edit Worker
+                    কর্মী সম্পাদনা
                 </h1>
                 <p className='text-muted-foreground mt-2'>
-                    Update {worker.name}'s information
+                    {worker.name}এর তথ্য আপডেট করুন
                 </p>
             </div>
 
             <Card className='shadow-sm'>
                 <CardHeader>
-                    <CardTitle className='text-xl'>
-                        Worker Information
-                    </CardTitle>
+                    <CardTitle className='text-xl'>কর্মীর তথ্য</CardTitle>
                     <CardDescription>
-                        Update worker details below
+                        নিচে কর্মীর বিবরণ আপডেট করুন
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -164,10 +162,10 @@ const EditWorkerForm = () => {
                                     name='name'
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Full Name</FormLabel>
+                                            <FormLabel>সম্পূর্ণ নাম</FormLabel>
                                             <FormControl>
                                                 <Input
-                                                    placeholder="Worker's full name"
+                                                    placeholder='কর্মীর সম্পূর্ণ নাম'
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -181,7 +179,7 @@ const EditWorkerForm = () => {
                                     name='phoneNumber'
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Phone Number</FormLabel>
+                                            <FormLabel>ফোন নম্বর</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     placeholder='01XXXXXXXXX'
@@ -200,11 +198,11 @@ const EditWorkerForm = () => {
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>
-                                                Daily Salary (৳)
+                                                দৈনিক বেতন (৳)
                                             </FormLabel>
                                             <FormControl>
                                                 <Input
-                                                    placeholder='500'
+                                                    placeholder='৫০০'
                                                     type='number'
                                                     min='0'
                                                     {...field}
@@ -220,10 +218,10 @@ const EditWorkerForm = () => {
                                     name='address'
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Address</FormLabel>
+                                            <FormLabel>ঠিকানা</FormLabel>
                                             <FormControl>
                                                 <Input
-                                                    placeholder='Home address'
+                                                    placeholder='বাসার ঠিকানা'
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -237,10 +235,10 @@ const EditWorkerForm = () => {
                                     name='age'
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Age</FormLabel>
+                                            <FormLabel>বয়স</FormLabel>
                                             <FormControl>
                                                 <Input
-                                                    placeholder='25'
+                                                    placeholder='২৫'
                                                     type='number'
                                                     min='0'
                                                     {...field}
@@ -256,7 +254,7 @@ const EditWorkerForm = () => {
                                     name='email'
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Email</FormLabel>
+                                            <FormLabel>ইমেইল</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     placeholder='example@email.com'
@@ -275,22 +273,22 @@ const EditWorkerForm = () => {
                                 name='status'
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Status</FormLabel>
+                                        <FormLabel>অবস্থা</FormLabel>
                                         <Select
                                             onValueChange={field.onChange}
                                             defaultValue={field.value}
                                         >
                                             <FormControl>
                                                 <SelectTrigger>
-                                                    <SelectValue placeholder='Select status' />
+                                                    <SelectValue placeholder='অবস্থা নির্বাচন করুন' />
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
                                                 <SelectItem value='ACTIVE'>
-                                                    Active
+                                                    সক্রিয়
                                                 </SelectItem>
                                                 <SelectItem value='INACTIVE'>
-                                                    Inactive
+                                                    নিষ্ক্রিয়
                                                 </SelectItem>
                                             </SelectContent>
                                         </Select>
@@ -306,15 +304,15 @@ const EditWorkerForm = () => {
                                     disabled={isUpdating}
                                 >
                                     {isUpdating
-                                        ? 'Updating...'
-                                        : 'Update Worker'}
+                                        ? 'আপডেট হচ্ছে...'
+                                        : 'কর্মী আপডেট করুন'}
                                 </Button>
                                 <Button
                                     type='button'
                                     variant='outline'
                                     onClick={() => navigate(-1)}
                                 >
-                                    Cancel
+                                    বাতিল
                                 </Button>
                             </div>
                         </form>

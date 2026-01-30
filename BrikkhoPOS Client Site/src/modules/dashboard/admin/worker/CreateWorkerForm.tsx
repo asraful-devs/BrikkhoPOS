@@ -72,14 +72,14 @@ const CreateWorkerForm = () => {
                     className='mb-6'
                 >
                     <ArrowLeft className='mr-2 h-4 w-4' />
-                    Go Back
+                    ফিরে যান
                 </Button>
                 <div className='mb-6'>
                     <h1 className='text-3xl font-bold text-foreground'>
-                        Add New Worker
+                        নতুন কর্মী যোগ করুন
                     </h1>
                     <p className='text-muted-foreground mt-2'>
-                        Fill in the worker information below
+                        নিচে কর্মীর তথ্য পূরণ করুন
                     </p>
                 </div>
             </motion.div>
@@ -91,11 +91,9 @@ const CreateWorkerForm = () => {
             >
                 <Card className='shadow-sm'>
                     <CardHeader>
-                        <CardTitle className='text-xl'>
-                            Worker Information
-                        </CardTitle>
+                        <CardTitle className='text-xl'>কর্মীর তথ্য</CardTitle>
                         <CardDescription>
-                            Provide accurate worker details for record keeping
+                            রেকর্ড সংরক্ষণের জন্য সঠিক কর্মীর বিবরণ প্রদান করুন
                         </CardDescription>
                     </CardHeader>
                     <CardContent className='pt-6'>
@@ -115,11 +113,11 @@ const CreateWorkerForm = () => {
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>
-                                                    Full Name *
+                                                    সম্পূর্ণ নাম *
                                                 </FormLabel>
                                                 <FormControl>
                                                     <Input
-                                                        placeholder="Enter worker's full name"
+                                                        placeholder='কর্মীর সম্পূর্ণ নাম লিখুন'
                                                         {...field}
                                                     />
                                                 </FormControl>
@@ -139,9 +137,7 @@ const CreateWorkerForm = () => {
                                         name='phoneNumber'
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>
-                                                    Phone Number
-                                                </FormLabel>
+                                                <FormLabel>ফোন নম্বর</FormLabel>
                                                 <FormControl>
                                                     <Input
                                                         placeholder='01XXXXXXXXX'
@@ -166,11 +162,11 @@ const CreateWorkerForm = () => {
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>
-                                                    Daily Salary (৳) *
+                                                    দৈনিক বেতন (৳) *
                                                 </FormLabel>
                                                 <FormControl>
                                                     <Input
-                                                        placeholder='500'
+                                                        placeholder='৫০০'
                                                         type='number'
                                                         min='0'
                                                         {...field}
@@ -194,15 +190,15 @@ const CreateWorkerForm = () => {
                                         disabled={isLoading}
                                     >
                                         {isLoading
-                                            ? 'Creating...'
-                                            : 'Create Worker'}
+                                            ? 'তৈরি হচ্ছে...'
+                                            : 'কর্মী তৈরি করুন'}
                                     </Button>
                                     <Button
                                         type='button'
                                         variant='outline'
                                         onClick={() => navigate(-1)}
                                     >
-                                        Cancel
+                                        বাতিল
                                     </Button>
                                 </motion.div>
                             </form>

@@ -75,7 +75,7 @@ const WorkerList = () => {
                 <div className='text-center'>
                     <Loader2 className='h-8 w-8 animate-spin mx-auto mb-4 text-muted-foreground' />
                     <p className='text-sm text-muted-foreground'>
-                        Loading workers...
+                        কর্মীদের তালিকা লোড হচ্ছে...
                     </p>
                 </div>
             </div>
@@ -87,10 +87,10 @@ const WorkerList = () => {
             <div className='flex items-center justify-center min-h-100'>
                 <div className='text-center'>
                     <h2 className='text-lg font-semibold text-destructive mb-2'>
-                        Error Loading Data
+                        ডেটা লোড করতে সমস্যা
                     </h2>
                     <p className='text-sm text-muted-foreground'>
-                        Failed to fetch worker list
+                        কর্মীদের তালিকা আনতে ব্যর্থ হয়েছে
                     </p>
                 </div>
             </div>
@@ -109,17 +109,16 @@ const WorkerList = () => {
                     <div className='flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4'>
                         <div>
                             <CardTitle className='text-2xl'>
-                                Worker List
+                                কর্মীদের তালিকা
                             </CardTitle>
                             <CardDescription className='mt-1'>
-                                Total {workers.length} worker
-                                {workers.length !== 1 ? 's' : ''}
+                                মোট {workers.length} জন কর্মী
                             </CardDescription>
                         </div>
                         <Link to='/dashboard/admin/create-worker'>
                             <Button className='w-full lg:w-auto'>
                                 <Plus className='mr-2 h-4 w-4' />
-                                Add New Worker
+                                নতুন কর্মী যোগ করুন
                             </Button>
                         </Link>
                     </div>
@@ -130,7 +129,7 @@ const WorkerList = () => {
                         <div className='relative flex-1 max-w-sm'>
                             <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
                             <Input
-                                placeholder='Search workers...'
+                                placeholder='কর্মী খুঁজুন...'
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className='pl-9'
@@ -143,14 +142,14 @@ const WorkerList = () => {
                         <div className='text-center py-12'>
                             <p className='text-muted-foreground mb-4'>
                                 {searchTerm
-                                    ? 'No workers found matching your search'
-                                    : 'No workers added yet'}
+                                    ? 'আপনার অনুসন্ধান অনুযায়ী কোন কর্মী পাওয়া যায়নি'
+                                    : 'এখনো কোন কর্মী যোগ করা হয়নি'}
                             </p>
                             {!searchTerm && (
                                 <Link to='/dashboard/admin/create-worker'>
                                     <Button>
                                         <Plus className='mr-2 h-4 w-4' />
-                                        Add First Worker
+                                        প্রথম কর্মী যোগ করুন
                                     </Button>
                                 </Link>
                             )}
@@ -160,12 +159,12 @@ const WorkerList = () => {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Name</TableHead>
-                                        <TableHead>Phone</TableHead>
-                                        <TableHead>Daily Salary</TableHead>
-                                        <TableHead>Status</TableHead>
+                                        <TableHead>নাম</TableHead>
+                                        <TableHead>ফোন</TableHead>
+                                        <TableHead>দৈনিক বেতন</TableHead>
+                                        <TableHead>অবস্থা</TableHead>
                                         <TableHead className='text-right'>
-                                            Actions
+                                            কার্যক্রম
                                         </TableHead>
                                     </TableRow>
                                 </TableHeader>
@@ -192,8 +191,8 @@ const WorkerList = () => {
                                                     }
                                                 >
                                                     {worker.status === 'ACTIVE'
-                                                        ? 'Active'
-                                                        : 'Inactive'}
+                                                        ? 'সক্রিয়'
+                                                        : 'নিষ্ক্রিয়'}
                                                 </Badge>
                                             </TableCell>
                                             <TableCell className='text-right'>
@@ -234,24 +233,28 @@ const WorkerList = () => {
                                                         <AlertDialogContent>
                                                             <AlertDialogHeader>
                                                                 <AlertDialogTitle>
-                                                                    Deactivate
-                                                                    Worker?
+                                                                    কর্মী
+                                                                    নিষ্ক্রিয়
+                                                                    করবেন?
                                                                 </AlertDialogTitle>
                                                                 <AlertDialogDescription>
-                                                                    Deactivating{' '}
                                                                     {
                                                                         worker.name
-                                                                    }{' '}
-                                                                    will hide
-                                                                    them from
-                                                                    the list but
-                                                                    preserve
-                                                                    their data.
+                                                                    }
+                                                                    কে
+                                                                    নিষ্ক্রিয়
+                                                                    করলে তারা
+                                                                    তালিকা থেকে
+                                                                    লুকানো হবে
+                                                                    কিন্তু তাদের
+                                                                    ডেটা
+                                                                    সংরক্ষিত
+                                                                    থাকবে।
                                                                 </AlertDialogDescription>
                                                             </AlertDialogHeader>
                                                             <AlertDialogFooter>
                                                                 <AlertDialogCancel>
-                                                                    Cancel
+                                                                    বাতিল
                                                                 </AlertDialogCancel>
                                                                 <AlertDialogAction
                                                                     onClick={() =>
@@ -260,7 +263,8 @@ const WorkerList = () => {
                                                                         )
                                                                     }
                                                                 >
-                                                                    Deactivate
+                                                                    নিষ্ক্রিয়
+                                                                    করুন
                                                                 </AlertDialogAction>
                                                             </AlertDialogFooter>
                                                         </AlertDialogContent>
@@ -282,27 +286,28 @@ const WorkerList = () => {
                                                         <AlertDialogContent>
                                                             <AlertDialogHeader>
                                                                 <AlertDialogTitle>
-                                                                    Delete
-                                                                    Worker
-                                                                    Permanently?
+                                                                    কর্মী
+                                                                    স্থায়ীভাবে
+                                                                    মুছে ফেলবেন?
                                                                 </AlertDialogTitle>
                                                                 <AlertDialogDescription>
-                                                                    This action
-                                                                    cannot be
-                                                                    undone.
-                                                                    Deleting{' '}
+                                                                    এই কাজটি
+                                                                    পূর্বাবস্থায়
+                                                                    ফেরানো যাবে
+                                                                    না।{' '}
                                                                     {
                                                                         worker.name
-                                                                    }{' '}
-                                                                    will
-                                                                    permanently
-                                                                    remove all
-                                                                    their data.
+                                                                    }
+                                                                    কে মুছে
+                                                                    ফেললে তাদের
+                                                                    সমস্ত ডেটা
+                                                                    স্থায়ীভাবে
+                                                                    মুছে যাবে।
                                                                 </AlertDialogDescription>
                                                             </AlertDialogHeader>
                                                             <AlertDialogFooter>
                                                                 <AlertDialogCancel>
-                                                                    Cancel
+                                                                    বাতিল
                                                                 </AlertDialogCancel>
                                                                 <AlertDialogAction
                                                                     onClick={() =>
@@ -312,8 +317,8 @@ const WorkerList = () => {
                                                                     }
                                                                     className='bg-destructive hover:bg-destructive/90'
                                                                 >
-                                                                    Delete
-                                                                    Permanently
+                                                                    স্থায়ীভাবে
+                                                                    মুছে ফেলুন
                                                                 </AlertDialogAction>
                                                             </AlertDialogFooter>
                                                         </AlertDialogContent>

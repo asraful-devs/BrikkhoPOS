@@ -54,9 +54,11 @@ export function LoginForm({
     return (
         <div className={cn('flex flex-col gap-6', className)} {...props}>
             <div className='flex flex-col items-center gap-2 text-center'>
-                <h1 className='text-2xl font-bold'>Login to your account</h1>
+                <h1 className='text-2xl font-bold'>
+                    আপনার অ্যাকাউন্টে লগইন করুন
+                </h1>
                 <p className='text-sm text-muted-foreground'>
-                    Enter your email and password to login
+                    লগইন করতে আপনার ইমেইল এবং পাসওয়ার্ড লিখুন
                 </p>
             </div>
 
@@ -71,16 +73,16 @@ export function LoginForm({
                             name='email'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Email</FormLabel>
+                                    <FormLabel>ইমেইল</FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder='john.doe@company.com'
+                                            placeholder='আপনার ইমেইল লিখুন'
                                             type='email'
                                             {...field}
                                         />
                                     </FormControl>
                                     <FormDescription className='sr-only'>
-                                        Enter your email address.
+                                        আপনার ইমেইল ঠিকানা লিখুন।
                                     </FormDescription>
                                     <FormMessage />
                                 </FormItem>
@@ -91,31 +93,31 @@ export function LoginForm({
                             name='password'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Password</FormLabel>
+                                    <FormLabel>পাসওয়ার্ড</FormLabel>
                                     <FormControl>
                                         <Password
-                                            placeholder='Enter your password'
+                                            placeholder='আপনার পাসওয়ার্ড লিখুন'
                                             {...field}
                                         />
                                     </FormControl>
                                     <FormDescription className='sr-only'>
-                                        Enter your password.
+                                        আপনার পাসওয়ার্ড লিখুন।
                                     </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
                         <Button type='submit' className='w-full'>
-                            Login
+                            লগইন করুন
                         </Button>
                     </form>
                 </Form>
             </div>
 
             <div className='text-center text-sm'>
-                Don&apos;t have an account?{' '}
+                অ্যাকাউন্ট নেই?{' '}
                 <Link to='/register' className='underline underline-offset-4'>
-                    Register
+                    নিবন্ধন করুন
                 </Link>
             </div>
         </div>

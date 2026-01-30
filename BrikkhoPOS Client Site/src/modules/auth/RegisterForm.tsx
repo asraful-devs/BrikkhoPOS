@@ -58,9 +58,11 @@ export function RegisterForm({
     return (
         <div className={cn('flex flex-col gap-6', className)} {...props}>
             <div className='flex flex-col items-center gap-2 text-center'>
-                <h1 className='text-2xl font-bold'>Register your account</h1>
+                <h1 className='text-2xl font-bold'>
+                    আপনার অ্যাকাউন্ট নিবন্ধন করুন
+                </h1>
                 <p className='text-sm text-muted-foreground'>
-                    Enter your details to create an account
+                    অ্যাকাউন্ট তৈরি করতে আপনার তথ্য লিখুন
                 </p>
             </div>
 
@@ -75,15 +77,15 @@ export function RegisterForm({
                             name='name'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Name</FormLabel>
+                                    <FormLabel>নাম</FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder='John Doe'
+                                            placeholder='আপনার নাম লিখুন'
                                             {...field}
                                         />
                                     </FormControl>
                                     <FormDescription className='sr-only'>
-                                        This is your public display name.
+                                        এটি আপনার প্রদর্শন নাম।
                                     </FormDescription>
                                     <FormMessage />
                                 </FormItem>
@@ -94,16 +96,16 @@ export function RegisterForm({
                             name='email'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Email</FormLabel>
+                                    <FormLabel>ইমেইল</FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder='john.doe@company.com'
+                                            placeholder='আপনার ইমেইল লিখুন'
                                             type='email'
                                             {...field}
                                         />
                                     </FormControl>
                                     <FormDescription className='sr-only'>
-                                        Enter your email address.
+                                        আপনার ইমেইল ঠিকানা লিখুন।
                                     </FormDescription>
                                     <FormMessage />
                                 </FormItem>
@@ -114,16 +116,15 @@ export function RegisterForm({
                             name='password'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Password</FormLabel>
+                                    <FormLabel>পাসওয়ার্ড</FormLabel>
                                     <FormControl>
                                         <Password
-                                            placeholder='Enter your password'
+                                            placeholder='আপনার পাসওয়ার্ড লিখুন'
                                             {...field}
                                         />
                                     </FormControl>
                                     <FormDescription className='sr-only'>
-                                        Enter a password with at least 8
-                                        characters.
+                                        কমপক্ষে ৮টি অক্ষর সহ পাসওয়ার্ড লিখুন।
                                     </FormDescription>
                                     <FormMessage />
                                 </FormItem>
@@ -134,31 +135,33 @@ export function RegisterForm({
                             name='confirmPassword'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Confirm Password</FormLabel>
+                                    <FormLabel>
+                                        পাসওয়ার্ড নিশ্চিত করুন
+                                    </FormLabel>
                                     <FormControl>
                                         <Password
-                                            placeholder='Confirm your password'
+                                            placeholder='আপনার পাসওয়ার্ড নিশ্চিত করুন'
                                             {...field}
                                         />
                                     </FormControl>
                                     <FormDescription className='sr-only'>
-                                        Confirm your password.
+                                        আপনার পাসওয়ার্ড নিশ্চিত করুন।
                                     </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
                         <Button type='submit' className='w-full'>
-                            Submit
+                            নিবন্ধন করুন
                         </Button>
                     </form>
                 </Form>
             </div>
 
             <div className='text-center text-sm'>
-                Already have an account?{' '}
+                ইতিমধ্যে অ্যাকাউন্ট আছে?{' '}
                 <Link to='/login' className='underline underline-offset-4'>
-                    Login
+                    লগইন করুন
                 </Link>
             </div>
         </div>

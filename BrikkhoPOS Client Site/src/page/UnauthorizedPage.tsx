@@ -14,19 +14,20 @@ const UnauthorizedPage = () => {
 
                 {/* Heading */}
                 <h1 className='text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4'>
-                    Unauthorized Access
+                    অননুমোদিত প্রবেশ
                 </h1>
 
                 {/* Description */}
                 <p className='text-gray-600 dark:text-gray-300 mb-6'>
-                    You don’t have permission to view this page. This might be
-                    an issue with your{' '}
-                    <span className='font-semibold'>role</span>.
+                    আপনার এই পেজ দেখার অনুমতি নেই। এটি আপনার{' '}
+                    <span className='font-semibold'>ভূমিকা</span> সম্পর্কিত
+                    সমস্যা হতে পারে।
                 </p>
 
                 {/* Suggestion */}
                 <p className='text-gray-700 dark:text-gray-400 mb-8'>
-                    Please try logging in again with the correct account.
+                    অনুগ্রহ করে সঠিক অ্যাকাউন্ট দিয়ে আবার লগইন করার চেষ্টা
+                    করুন।
                 </p>
 
                 {/* Button */}
@@ -34,7 +35,7 @@ const UnauthorizedPage = () => {
                     to='/login'
                     className='inline-block px-6 py-3 bg-red-500 text-white font-medium rounded-lg shadow-md hover:bg-red-600 transition'
                 >
-                    Go to Login
+                    লগইন পেজে যান
                 </Link>
             </div>
         </div>

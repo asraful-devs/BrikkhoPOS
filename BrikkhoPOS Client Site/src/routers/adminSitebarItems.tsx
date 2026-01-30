@@ -15,85 +15,85 @@ import type { ISidebarItem } from '../types';
 
 export const adminSidebarItems: ISidebarItem[] = [
     {
-        title: 'Worker Management',
+        title: 'কর্মী ব্যবস্থাপনা',
         items: [
             {
-                title: 'Add Worker',
+                title: 'কর্মী যোগ করুন',
                 url: '/dashboard/admin/create-worker',
                 component: CreateWorkerForm,
             },
             {
-                title: 'Worker List',
+                title: 'কর্মীদের তালিকা',
                 url: '/dashboard/admin/worker-list',
                 component: WorkerList,
             },
             {
-                title: 'Edit Worker',
+                title: 'কর্মী সম্পাদনা',
                 url: '/dashboard/admin/edit-worker/:id',
                 component: EditWorkerForm,
             },
             {
-                title: 'Worker Details',
+                title: 'কর্মীর বিস্তারিত',
                 url: '/dashboard/admin/worker/:id',
                 component: WorkerDetails,
             },
         ],
     },
     {
-        title: 'Attendance Management',
+        title: 'উপস্থিতি ব্যবস্থাপনা',
         items: [
             {
-                title: 'Create Attendance',
+                title: 'উপস্থিতি তৈরি করুন',
                 url: '/dashboard/admin/create-attendance',
                 component: CreateAttendance,
             },
             {
-                title: 'Attendance List',
+                title: 'উপস্থিতির তালিকা',
                 url: '/dashboard/admin/attendance-list',
                 component: AttendanceList,
             },
             {
-                title: 'Edit Attendance',
+                title: 'উপস্থিতি সম্পাদনা',
                 url: '/dashboard/admin/edit-attendance/:id',
                 component: EditAttendance,
             },
         ],
     },
     {
-        title: 'Weekly Summary',
+        title: 'সাপ্তাহিক সারসংক্ষেপ',
         items: [
             {
-                title: 'Create Summary',
+                title: 'সারসংক্ষেপ তৈরি করুন',
                 url: '/dashboard/admin/create-weekly-summary',
                 component: CreateWeeklySummary,
             },
             {
-                title: 'Summary List',
+                title: 'সারসংক্ষেপের তালিকা',
                 url: '/dashboard/admin/weekly-summary-list',
                 component: WeeklySummaryList,
             },
             {
-                title: 'Summary Details',
+                title: 'সারসংক্ষেপের বিস্তারিত',
                 url: '/dashboard/admin/weekly-summary/:id',
                 component: WeeklySummaryDetails,
             },
             {
-                title: 'Weekly Report',
+                title: 'সাপ্তাহিক রিপোর্ট',
                 url: '/dashboard/admin/weekly-report',
                 component: WeeklyReport,
             },
         ],
     },
     {
-        title: 'Salary Adjustment',
+        title: 'বেতন সামঞ্জস্য',
         items: [
             {
-                title: 'Add Adjustment',
+                title: 'সামঞ্জস্য যোগ করুন',
                 url: '/dashboard/admin/add-salary-adjustment',
                 component: CreateSalaryAdjustment,
             },
             {
-                title: 'Adjustment List',
+                title: 'সামঞ্জস্যের তালিকা',
                 url: '/dashboard/admin/salary-adjustment-list',
                 component: SalaryAdjustmentList,
             },
