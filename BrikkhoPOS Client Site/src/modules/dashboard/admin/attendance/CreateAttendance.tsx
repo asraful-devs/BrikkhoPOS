@@ -42,6 +42,7 @@ const CreateAttendance = () => {
         useLazyGetAttendancesByDateQuery();
     const [bulkUpsertAttendance] = useBulkUpsertAttendanceMutation();
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const workers = workersData?.data || [];
 
     // Load existing attendances when date changes
@@ -200,11 +201,22 @@ const CreateAttendance = () => {
                                     id='date'
                                     type='date'
                                     value={selectedDate}
+                                    max={new Date().toISOString().split('T')[0]}
                                     onChange={(e) =>
                                         setSelectedDate(e.target.value)
                                     }
                                     className='w-48'
                                 />
+                                {existingAttendances?.data &&
+                                    existingAttendances.data.length > 0 && (
+                                        <Badge
+                                            variant='secondary'
+                                            className='text-xs'
+                                        >
+                                            ✓ {existingAttendances.data.length}{' '}
+                                            জনের হাজিরা আছে
+                                        </Badge>
+                                    )}
                             </div>
                         </div>
                     </div>
