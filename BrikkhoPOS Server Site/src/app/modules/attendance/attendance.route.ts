@@ -11,7 +11,17 @@ router.post(
     AttendanceController.CreateAttendance
 );
 
+router.post(
+    '/bulk-upsert-attendance',
+    AttendanceController.BulkUpsertAttendance
+);
+
 router.get('/get-attendances', AttendanceController.GetAllAttendances);
+
+router.get(
+    '/get-attendances-by-date/:date',
+    AttendanceController.GetAttendancesByDate
+);
 
 router.get(
     '/get-single-attendance/:id',

@@ -58,6 +58,7 @@ export const adminSidebarItems: ISidebarItem[] = [
                 title: 'উপস্থিতি সম্পাদনা',
                 url: '/dashboard/admin/edit-attendance/:id',
                 component: EditAttendance,
+                showInSidebar: false,
             },
         ],
     },

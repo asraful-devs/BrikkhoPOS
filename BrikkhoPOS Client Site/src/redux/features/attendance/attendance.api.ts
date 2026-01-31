@@ -1,6 +1,8 @@
 import type {
     IAttendanceResponse,
     IAttendancesResponse,
+    IBulkAttendanceResponse,
+    IBulkUpsertAttendance,
     ICreateAttendance,
     IUpdateAttendance,
 } from '@/types/attendance.types';
@@ -20,9 +22,29 @@ export const attendanceApi = baseApi.injectEndpoints({
             invalidatesTags: ['ATTENDANCE', 'WEEKLY_SUMMARY'],
         }),
 
+        bulkUpsertAttendance: builder.mutation<
+            IBulkAttendanceResponse,
+            IBulkUpsertAttendance
+        >({
+            query: (data) => ({
+                url: '/attendance/bulk-upsert-attendance',
+                method: 'POST',
+                data,
+            }),
+            invalidatesTags: ['ATTENDANCE', 'WEEKLY_SUMMARY'],
+        }),
+
         getAttendances: builder.query<IAttendancesResponse, void>({
             query: () => ({
                 url: '/attendance/get-attendances',
+                method: 'GET',
+            }),
+            providesTags: ['ATTENDANCE'],
+        }),
+
+        getAttendancesByDate: builder.query<IAttendancesResponse, string>({
+            query: (date) => ({
+                url: `/attendance/get-attendances-by-date/${date}`,
                 method: 'GET',
             }),
             providesTags: ['ATTENDANCE'],
@@ -60,7 +82,10 @@ export const attendanceApi = baseApi.injectEndpoints({
 
 export const {
     useCreateAttendanceMutation,
+    useBulkUpsertAttendanceMutation,
     useGetAttendancesQuery,
+    useGetAttendancesByDateQuery,
+    useLazyGetAttendancesByDateQuery,
     useGetSingleAttendanceQuery,
     useUpdateAttendanceMutation,
     useDeleteAttendanceMutation,

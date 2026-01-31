@@ -26,6 +26,97 @@ const createAttendance = async (req: Request) => {
     }
 };
 
+// Bulk create or update attendance for a specific date
+const bulkUpsertAttendance = async (req: Request) => {
+    const { date, attendances } = req.body;
+
+    if (!date || !Array.isArray(attendances) || attendances.length === 0) {
+        throw new ApiError(400, 'Date and attendances array are required');
+    }
+
+    const results = [];
+
+    for (const attendance of attendances) {
+        const { workerId, isPresent, workHours, note } = attendance;
+
+        // Check if attendance exists for this worker on this date
+        const existingAttendance = await prisma.attendance.findFirst({
+            where: {
+                workerId,
+                date: new Date(date),
+            },
+        });
+
+        let result;
+        if (existingAttendance) {
+            // Update existing attendance
+            result = await prisma.attendance.update({
+                where: { id: existingAttendance.id },
+                data: {
+                    isPresent,
+                    workHours,
+                    note,
+                },
+                include: {
+                    worker: true,
+                },
+            });
+        } else {
+            // Create new attendance
+            result = await prisma.attendance.create({
+                data: {
+                    workerId,
+                    date: new Date(date),
+                    isPresent,
+                    workHours,
+                    note,
+                },
+                include: {
+                    worker: true,
+                },
+            });
+        }
+
+        results.push(result);
+    }
+
+    return results;
+};
+
+// Get attendances by date
+const getAttendancesByDate = async (req: Request) => {
+    const { date } = req.params;
+
+    if (!date) {
+        throw new ApiError(400, 'Date is required');
+    }
+
+    const startDate = new Date(date);
+    startDate.setHours(0, 0, 0, 0);
+
+    const endDate = new Date(date);
+    endDate.setHours(23, 59, 59, 999);
+
+    const result = await prisma.attendance.findMany({
+        where: {
+            date: {
+                gte: startDate,
+                lte: endDate,
+            },
+        },
+        include: {
+            worker: true,
+        },
+        orderBy: {
+            worker: {
+                name: 'asc',
+            },
+        },
+    });
+
+    return result;
+};
+
 const getAllAttendances = async (
     filters: {
         searchTerm?: string;
@@ -140,4 +231,6 @@ export const AttendanceService = {
     getSingleAttendance,
     updateAttendance,
     deleteAttendance,
+    bulkUpsertAttendance,
+    getAttendancesByDate,
 };

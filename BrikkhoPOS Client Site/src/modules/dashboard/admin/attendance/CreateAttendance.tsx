@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -6,214 +7,417 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
-import { useCreateAttendanceMutation } from '@/redux/features/attendance/attendance.api';
+    useBulkUpsertAttendanceMutation,
+    useLazyGetAttendancesByDateQuery,
+} from '@/redux/features/attendance/attendance.api';
 import { useGetWorkersQuery } from '@/redux/features/worker/worker.api';
-import { attendanceZod } from '@/zod/attendance.zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import type { IAttendance } from '@/types/attendance.types';
+import type { IWorker } from '@/types/worker.types';
+import { Check, Loader2, Minus, User, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { z } from 'zod';
 
-type FormData = z.infer<typeof attendanceZod.createAttendanceSchema>;
+interface WorkerAttendanceState {
+    workerId: string;
+    status: 'PRESENT' | 'ABSENT' | 'HALF_DAY' | null;
+    workHours: number;
+    note: string;
+}
 
 const CreateAttendance = () => {
-    const [createAttendance, { isLoading }] = useCreateAttendanceMutation();
+    const [selectedDate, setSelectedDate] = useState<string>(
+        new Date().toISOString().split('T')[0]
+    );
+    const [workerStates, setWorkerStates] = useState<
+        Record<string, WorkerAttendanceState>
+    >({});
+    const [isSaving, setIsSaving] = useState(false);
+
     const { data: workersData, isLoading: isLoadingWorkers } =
         useGetWorkersQuery();
-    const navigate = useNavigate();
+    const [getAttendancesByDate, { data: existingAttendances }] =
+        useLazyGetAttendancesByDateQuery();
+    const [bulkUpsertAttendance] = useBulkUpsertAttendanceMutation();
 
     const workers = workersData?.data || [];
 
-    const form = useForm<FormData>({
-        resolver: zodResolver(attendanceZod.createAttendanceSchema),
-        defaultValues: {
-            workerId: '',
-            date: new Date().toISOString().split('T')[0],
-            isPresent: true,
-            workHours: 8,
-            note: '',
-        },
-    });
+    // Load existing attendances when date changes
+    useEffect(() => {
+        if (selectedDate) {
+            getAttendancesByDate(selectedDate);
+        }
+    }, [selectedDate, getAttendancesByDate]);
 
-    const onSubmit = async (data: FormData) => {
+    // Initialize worker states from existing attendances
+    useEffect(() => {
+        const initialStates: Record<string, WorkerAttendanceState> = {};
+
+        workers.forEach((worker: IWorker) => {
+            const existingAttendance = existingAttendances?.data?.find(
+                (att: IAttendance) => att.workerId === worker.id
+            );
+
+            if (existingAttendance) {
+                let status: 'PRESENT' | 'ABSENT' | 'HALF_DAY' | null = null;
+                if (existingAttendance.isPresent) {
+                    status =
+                        existingAttendance.workHours === 4
+                            ? 'HALF_DAY'
+                            : 'PRESENT';
+                } else {
+                    status = 'ABSENT';
+                }
+
+                initialStates[worker.id] = {
+                    workerId: worker.id,
+                    status,
+                    workHours: existingAttendance.workHours || 8,
+                    note: existingAttendance.note || '',
+                };
+            } else {
+                initialStates[worker.id] = {
+                    workerId: worker.id,
+                    status: null,
+                    workHours: 8,
+                    note: '',
+                };
+            }
+        });
+
+        setWorkerStates(initialStates);
+    }, [workers, existingAttendances]);
+
+    const handleStatusClick = (
+        workerId: string,
+        status: 'PRESENT' | 'ABSENT' | 'HALF_DAY'
+    ) => {
+        const currentState = workerStates[workerId];
+        const newStatus = currentState?.status === status ? null : status;
+
+        let workHours = 8;
+        if (newStatus === 'HALF_DAY') workHours = 4;
+        else if (newStatus === 'ABSENT') workHours = 0;
+
+        setWorkerStates((prev) => ({
+            ...prev,
+            [workerId]: {
+                ...prev[workerId],
+                status: newStatus,
+                workHours,
+            },
+        }));
+    };
+
+    const handleSaveAll = async () => {
+        setIsSaving(true);
         try {
-            await createAttendance(data).unwrap();
-            toast.success('হাজিরা সফলভাবে দেওয়া হয়েছে');
-            navigate('/dashboard/admin/attendance-list');
+            const attendances = Object.values(workerStates)
+                .filter((state) => state.status !== null)
+                .map((state) => ({
+                    workerId: state.workerId,
+                    isPresent: state.status !== 'ABSENT',
+                    workHours: state.workHours,
+                    note: state.note,
+                }));
+
+            if (attendances.length === 0) {
+                toast.error('অন্তত একজন শ্রমিকের হাজিরা দিন');
+                return;
+            }
+
+            await bulkUpsertAttendance({
+                date: selectedDate,
+                attendances,
+            }).unwrap();
+
+            toast.success('সকল হাজিরা সফলভাবে সংরক্ষণ করা হয়েছে');
         } catch (error) {
             console.error(error);
-            toast.error('হাজিরা দিতে ব্যর্থ হয়েছে');
+            toast.error('হাজিরা সংরক্ষণে সমস্যা হয়েছে');
+        } finally {
+            setIsSaving(false);
         }
     };
 
+    const getStatusBadge = (status: WorkerAttendanceState['status']) => {
+        if (!status) return null;
+
+        const config = {
+            PRESENT: {
+                label: 'উপস্থিত',
+                variant: 'default' as const,
+                className: 'bg-green-500 hover:bg-green-600',
+            },
+            ABSENT: {
+                label: 'অনুপস্থিত',
+                variant: 'destructive' as const,
+                className: '',
+            },
+            HALF_DAY: {
+                label: 'অর্ধদিবস',
+                variant: 'secondary' as const,
+                className: 'bg-orange-500 hover:bg-orange-600 text-white',
+            },
+        };
+
+        const { label, className } = config[status];
+        return <Badge className={className}>{label}</Badge>;
+    };
+
+    const markedCount = Object.values(workerStates).filter(
+        (state) => state.status !== null
+    ).length;
+
+    if (isLoadingWorkers) {
+        return (
+            <div className='flex items-center justify-center h-64'>
+                <Loader2 className='h-8 w-8 animate-spin text-primary' />
+            </div>
+        );
+    }
+
     return (
-        <div className='max-w-2xl mx-auto'>
+        <div className='space-y-6'>
+            {/* Header Card with Date Selection */}
             <Card>
                 <CardHeader>
-                    <CardTitle className='text-2xl'>হাজিরা দিন</CardTitle>
-                    <CardDescription>
-                        শ্রমিকের দৈনিক হাজিরা এন্ট্রি করুন
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Form {...form}>
-                        <form
-                            onSubmit={form.handleSubmit(onSubmit)}
-                            className='space-y-6'
-                        >
-                            <FormField
-                                control={form.control}
-                                name='workerId'
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>
-                                            শ্রমিক নির্বাচন করুন *
-                                        </FormLabel>
-                                        <Select
-                                            onValueChange={field.onChange}
-                                            defaultValue={field.value}
-                                            disabled={isLoadingWorkers}
-                                        >
-                                            <FormControl>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder='শ্রমিক নির্বাচন করুন' />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                {workers.map((worker) => (
-                                                    <SelectItem
-                                                        key={worker.id}
-                                                        value={worker.id}
-                                                    >
-                                                        {worker.name}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                        <FormDescription className='sr-only'>
-                                            যে শ্রমিকের হাজিরা দিতে চান
-                                        </FormDescription>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name='date'
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>তারিখ</FormLabel>
-                                        <FormControl>
-                                            <Input type='date' {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name='isPresent'
-                                render={({ field }) => (
-                                    <FormItem className='flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4'>
-                                        <FormControl>
-                                            <Checkbox
-                                                checked={field.value}
-                                                onCheckedChange={field.onChange}
-                                            />
-                                        </FormControl>
-                                        <div className='space-y-1 leading-none'>
-                                            <FormLabel>উপস্থিত</FormLabel>
-                                            <FormDescription>
-                                                শ্রমিক আজ কাজে এসেছে কিনা
-                                            </FormDescription>
-                                        </div>
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name='workHours'
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>
-                                            কাজের সময় (ঘণ্টা)
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder='8'
-                                                type='number'
-                                                min='0'
-                                                max='24'
-                                                step='0.5'
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name='note'
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>নোট</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder='কোন বিশেষ নোট থাকলে লিখুন'
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <div className='flex gap-4'>
-                                <Button
-                                    type='submit'
-                                    className='flex-1'
-                                    disabled={isLoading}
-                                >
-                                    {isLoading
-                                        ? 'দেওয়া হচ্ছে...'
-                                        : 'হাজিরা দিন'}
-                                </Button>
-                                <Button
-                                    type='button'
-                                    variant='outline'
-                                    onClick={() => navigate(-1)}
-                                >
-                                    বাতিল
-                                </Button>
+                    <div className='flex items-center justify-between flex-wrap gap-4'>
+                        <div>
+                            <CardTitle className='text-2xl'>
+                                দৈনিক হাজিরা
+                            </CardTitle>
+                            <CardDescription>
+                                তারিখ নির্বাচন করুন এবং শ্রমিকদের হাজিরা দিন
+                            </CardDescription>
+                        </div>
+                        <div className='flex items-center gap-4'>
+                            <div className='flex flex-col gap-2'>
+                                <Label htmlFor='date'>তারিখ</Label>
+                                <Input
+                                    id='date'
+                                    type='date'
+                                    value={selectedDate}
+                                    onChange={(e) =>
+                                        setSelectedDate(e.target.value)
+                                    }
+                                    className='w-48'
+                                />
                             </div>
-                        </form>
-                    </Form>
+                        </div>
+                    </div>
+                </CardHeader>
+            </Card>
+
+            {/* Stats Card */}
+            <Card>
+                <CardContent className='pt-6'>
+                    <div className='flex items-center justify-between flex-wrap gap-4'>
+                        <div className='flex items-center gap-6'>
+                            <div className='text-center'>
+                                <div className='text-2xl font-bold'>
+                                    {workers.length || 0}
+                                </div>
+                                <div className='text-sm text-muted-foreground'>
+                                    মোট শ্রমিক
+                                </div>
+                            </div>
+                            <div className='text-center'>
+                                <div className='text-2xl font-bold text-primary'>
+                                    {markedCount}
+                                </div>
+                                <div className='text-sm text-muted-foreground'>
+                                    হাজিরা দেওয়া হয়েছে
+                                </div>
+                            </div>
+                        </div>
+                        <Button
+                            onClick={handleSaveAll}
+                            disabled={isSaving || markedCount === 0}
+                            size='lg'
+                        >
+                            {isSaving ? (
+                                <>
+                                    <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                                    সংরক্ষণ হচ্ছে...
+                                </>
+                            ) : (
+                                `সকল হাজিরা সংরক্ষণ করুন (${markedCount})`
+                            )}
+                        </Button>
+                    </div>
                 </CardContent>
             </Card>
+
+            {/* Legend Card */}
+            <Card>
+                <CardContent className='pt-6'>
+                    <div className='flex items-center gap-6 flex-wrap'>
+                        <div className='flex items-center gap-2'>
+                            <div className='w-3 h-3 rounded-full bg-green-500' />
+                            <span className='text-sm'>উপস্থিত (৮ ঘণ্টা)</span>
+                        </div>
+                        <div className='flex items-center gap-2'>
+                            <div className='w-3 h-3 rounded-full bg-orange-500' />
+                            <span className='text-sm'>অর্ধদিবস (৪ ঘণ্টা)</span>
+                        </div>
+                        <div className='flex items-center gap-2'>
+                            <div className='w-3 h-3 rounded-full bg-red-500' />
+                            <span className='text-sm'>অনুপস্থিত (০ ঘণ্টা)</span>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+
+            {/* Workers Grid */}
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+                {workers.map((worker: IWorker) => {
+                    const state = workerStates[worker.id];
+                    if (!state) return null;
+
+                    return (
+                        <Card
+                            key={worker.id}
+                            className={`transition-all hover:shadow-lg ${
+                                state.status
+                                    ? 'border-primary shadow-md'
+                                    : 'border-border'
+                            }`}
+                        >
+                            <CardHeader className='pb-3'>
+                                <div className='flex items-start justify-between'>
+                                    <div className='flex items-center gap-3'>
+                                        <div className='h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center'>
+                                            {worker.profilePicture ? (
+                                                <img
+                                                    src={worker.profilePicture}
+                                                    alt={worker.name}
+                                                    className='h-12 w-12 rounded-full object-cover'
+                                                />
+                                            ) : (
+                                                <User className='h-6 w-6 text-primary' />
+                                            )}
+                                        </div>
+                                        <div>
+                                            <CardTitle className='text-lg'>
+                                                {worker.name}
+                                            </CardTitle>
+                                            <CardDescription>
+                                                ৳{worker.dailySalary}/দিন
+                                            </CardDescription>
+                                        </div>
+                                    </div>
+                                    {getStatusBadge(state.status)}
+                                </div>
+                            </CardHeader>
+                            <CardContent className='space-y-3'>
+                                {/* Status Buttons */}
+                                <div className='grid grid-cols-3 gap-2'>
+                                    <Button
+                                        type='button'
+                                        variant={
+                                            state.status === 'PRESENT'
+                                                ? 'default'
+                                                : 'outline'
+                                        }
+                                        size='sm'
+                                        onClick={() =>
+                                            handleStatusClick(
+                                                worker.id,
+                                                'PRESENT'
+                                            )
+                                        }
+                                        className={
+                                            state.status === 'PRESENT'
+                                                ? 'bg-green-500 hover:bg-green-600'
+                                                : 'hover:bg-green-50'
+                                        }
+                                    >
+                                        <Check className='h-4 w-4 mr-1' />
+                                        উপস্থিত
+                                    </Button>
+                                    <Button
+                                        type='button'
+                                        variant={
+                                            state.status === 'HALF_DAY'
+                                                ? 'default'
+                                                : 'outline'
+                                        }
+                                        size='sm'
+                                        onClick={() =>
+                                            handleStatusClick(
+                                                worker.id,
+                                                'HALF_DAY'
+                                            )
+                                        }
+                                        className={
+                                            state.status === 'HALF_DAY'
+                                                ? 'bg-orange-500 hover:bg-orange-600'
+                                                : 'hover:bg-orange-50'
+                                        }
+                                    >
+                                        <Minus className='h-4 w-4 mr-1' />
+                                        অর্ধদিবস
+                                    </Button>
+                                    <Button
+                                        type='button'
+                                        variant={
+                                            state.status === 'ABSENT'
+                                                ? 'destructive'
+                                                : 'outline'
+                                        }
+                                        size='sm'
+                                        onClick={() =>
+                                            handleStatusClick(
+                                                worker.id,
+                                                'ABSENT'
+                                            )
+                                        }
+                                        className={
+                                            state.status !== 'ABSENT'
+                                                ? 'hover:bg-red-50'
+                                                : ''
+                                        }
+                                    >
+                                        <X className='h-4 w-4 mr-1' />
+                                        অনুপস্থিত
+                                    </Button>
+                                </div>
+
+                                {/* Note Input (only show if status is selected) */}
+                                {state.status && (
+                                    <div>
+                                        <Input
+                                            placeholder='নোট (ঐচ্ছিক)'
+                                            value={state.note}
+                                            onChange={(e) =>
+                                                setWorkerStates((prev) => ({
+                                                    ...prev,
+                                                    [worker.id]: {
+                                                        ...prev[worker.id],
+                                                        note: e.target.value,
+                                                    },
+                                                }))
+                                            }
+                                            className='text-sm'
+                                        />
+                                    </div>
+                                )}
+                            </CardContent>
+                        </Card>
+                    );
+                })}
+            </div>
+
+            {workers.length === 0 && (
+                <Card>
+                    <CardContent className='py-12 text-center text-muted-foreground'>
+                        কোন শ্রমিক পাওয়া যায়নি
+                    </CardContent>
+                </Card>
+            )}
         </div>
     );
 };

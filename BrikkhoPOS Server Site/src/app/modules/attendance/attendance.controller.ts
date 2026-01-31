@@ -64,10 +64,34 @@ const DeleteAttendance = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const BulkUpsertAttendance = catchAsync(async (req: Request, res: Response) => {
+    const result = await AttendanceService.bulkUpsertAttendance(req);
+
+    sendResponse(res, {
+        statusCode: status.OK,
+        success: true,
+        message: 'Bulk attendance saved successfully',
+        data: result,
+    });
+});
+
+const GetAttendancesByDate = catchAsync(async (req: Request, res: Response) => {
+    const result = await AttendanceService.getAttendancesByDate(req);
+
+    sendResponse(res, {
+        statusCode: status.OK,
+        success: true,
+        message: 'Attendances retrieved successfully',
+        data: result,
+    });
+});
+
 export const AttendanceController = {
     CreateAttendance,
     GetAllAttendances,
     GetSingleAttendance,
     UpdateAttendance,
     DeleteAttendance,
+    BulkUpsertAttendance,
+    GetAttendancesByDate,
 };

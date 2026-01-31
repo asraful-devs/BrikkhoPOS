@@ -1,5 +1,7 @@
 import type { IWorker } from './worker.types';
 
+export type TAttendanceStatus = 'PRESENT' | 'ABSENT' | 'HALF_DAY';
+
 export interface IAttendance {
     id: string;
     workerId: string;
@@ -26,6 +28,18 @@ export interface IUpdateAttendance {
     note?: string;
 }
 
+export interface IBulkAttendanceItem {
+    workerId: string;
+    isPresent: boolean;
+    workHours?: number;
+    note?: string;
+}
+
+export interface IBulkUpsertAttendance {
+    date: string;
+    attendances: IBulkAttendanceItem[];
+}
+
 export interface IAttendanceResponse {
     success: boolean;
     message: string;
@@ -33,6 +47,12 @@ export interface IAttendanceResponse {
 }
 
 export interface IAttendancesResponse {
+    success: boolean;
+    message: string;
+    data: IAttendance[];
+}
+
+export interface IBulkAttendanceResponse {
     success: boolean;
     message: string;
     data: IAttendance[];
