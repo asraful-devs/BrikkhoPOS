@@ -49,12 +49,5 @@ export interface IWorkerResponse {
 export interface IWorkersResponse {
     success: boolean;
     message: string;
-    data: {
-        meta: {
-            page: number;
-            limit: number;
-            total: number;
-        };
-        data: IWorker[];
-    };
+    data: IWorker[];
 }

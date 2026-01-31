@@ -1,3 +1,4 @@
+import InputComponents from '@/components/common/InputComponents';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -14,7 +15,6 @@ import {
     FormLabel,
     FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 import {
     Select,
     SelectContent,
@@ -157,114 +157,58 @@ const EditWorkerForm = () => {
                             className='space-y-6'
                         >
                             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                                <FormField
+                                <InputComponents
                                     control={form.control}
                                     name='name'
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>সম্পূর্ণ নাম</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    placeholder='কর্মীর সম্পূর্ণ নাম'
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
+                                    title='সম্পূর্ণ নাম'
+                                    placeholder='কর্মীর সম্পূর্ণ নাম'
+                                    delay={0.3}
                                 />
 
-                                <FormField
+                                <InputComponents
                                     control={form.control}
                                     name='phoneNumber'
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>ফোন নম্বর</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    placeholder='01XXXXXXXXX'
-                                                    type='tel'
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
+                                    title='ফোন নম্বর'
+                                    placeholder='01XXXXXXXXX'
+                                    typeName='tel'
+                                    delay={0.35}
                                 />
 
-                                <FormField
+                                <InputComponents
                                     control={form.control}
                                     name='dailySalary'
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>
-                                                দৈনিক বেতন (৳)
-                                            </FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    placeholder='৫০০'
-                                                    type='number'
-                                                    min='0'
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
+                                    title='দৈনিক বেতন (৳)'
+                                    placeholder='৫০০'
+                                    typeName='number'
+                                    min='0'
+                                    delay={0.4}
                                 />
 
-                                <FormField
+                                <InputComponents
                                     control={form.control}
                                     name='address'
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>ঠিকানা</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    placeholder='বাসার ঠিকানা'
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
+                                    title='ঠিকানা'
+                                    placeholder='বাসার ঠিকানা'
+                                    delay={0.45}
                                 />
 
-                                <FormField
+                                <InputComponents
                                     control={form.control}
                                     name='age'
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>বয়স</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    placeholder='২৫'
-                                                    type='number'
-                                                    min='0'
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
+                                    title='বয়স'
+                                    placeholder='২৫'
+                                    typeName='number'
+                                    min='0'
+                                    delay={0.5}
                                 />
 
-                                <FormField
+                                <InputComponents
                                     control={form.control}
                                     name='email'
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>ইমেইল</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    placeholder='example@email.com'
-                                                    type='email'
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
+                                    title='ইমেইল'
+                                    placeholder='example@email.com'
+                                    typeName='email'
+                                    delay={0.55}
                                 />
                             </div>
 

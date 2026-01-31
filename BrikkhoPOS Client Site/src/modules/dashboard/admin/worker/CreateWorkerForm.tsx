@@ -1,3 +1,4 @@
+import InputComponents from '@/components/common/InputComponents';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -6,15 +7,7 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { Form } from '@/components/ui/form';
 import { useCreateWorkerMutation } from '@/redux/features/worker/worker.api';
 import { workerZod } from '@/zod/worker.zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -102,81 +95,34 @@ const CreateWorkerForm = () => {
                                 onSubmit={form.handleSubmit(onSubmit)}
                                 className='space-y-6'
                             >
-                                <motion.div
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.3 }}
-                                >
-                                    <FormField
-                                        control={form.control}
-                                        name='name'
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>
-                                                    সম্পূর্ণ নাম *
-                                                </FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        placeholder='কর্মীর সম্পূর্ণ নাম লিখুন'
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                </motion.div>
+                                <InputComponents
+                                    control={form.control}
+                                    name='name'
+                                    title='সম্পূর্ণ নাম'
+                                    placeholder='কর্মীর সম্পূর্ণ নাম লিখুন'
+                                    delay={0.3}
+                                    required
+                                />
 
-                                <motion.div
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.4 }}
-                                >
-                                    <FormField
-                                        control={form.control}
-                                        name='phoneNumber'
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>ফোন নম্বর</FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        placeholder='01XXXXXXXXX'
-                                                        type='tel'
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                </motion.div>
+                                <InputComponents
+                                    control={form.control}
+                                    name='phoneNumber'
+                                    title='ফোন নম্বর'
+                                    placeholder='01XXXXXXXXX'
+                                    typeName='tel'
+                                    delay={0.4}
+                                />
 
-                                <motion.div
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.5 }}
-                                >
-                                    <FormField
-                                        control={form.control}
-                                        name='dailySalary'
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>
-                                                    দৈনিক বেতন (৳) *
-                                                </FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        placeholder='৫০০'
-                                                        type='number'
-                                                        min='0'
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                </motion.div>
+                                <InputComponents
+                                    control={form.control}
+                                    name='dailySalary'
+                                    title='দৈনিক বেতন (৳)'
+                                    placeholder='৫০০'
+                                    typeName='number'
+                                    min='0'
+                                    delay={0.5}
+                                    required
+                                />
 
                                 <motion.div
                                     initial={{ opacity: 0, y: 20 }}
