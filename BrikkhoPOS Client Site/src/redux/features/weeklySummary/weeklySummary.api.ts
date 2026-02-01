@@ -57,10 +57,8 @@ export const weeklySummaryApi = baseApi.injectEndpoints({
             invalidatesTags: ['WEEKLY_SUMMARY'],
         }),
 
-        generateWeeklyReport: builder.mutation<
-            IWeeklySummaryResponse,
-            IWeeklyReportRequest
-        >({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        generateWeeklyReport: builder.mutation<any, IWeeklyReportRequest>({
             query: (reportData) => ({
                 url: '/weekly-summary/weekly-report',
                 method: 'POST',

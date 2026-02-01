@@ -17,7 +17,6 @@ export interface IWeeklySummary {
 }
 
 export interface ICreateWeeklySummary {
-    workerId: string;
     weekStartDate: string;
     weekEndDate: string;
     isPaid?: boolean;
@@ -40,7 +39,6 @@ export interface IWeeklySummariesResponse {
 }
 
 export interface IWeeklyReportRequest {
-    workerId: string;
     weekStartDate: string;
     weekEndDate: string;
 }

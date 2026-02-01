@@ -1,12 +1,11 @@
 import z from 'zod';
 
 const createWeeklySummarySchema = z.object({
-    workerId: z.string().min(1, { message: 'Worker selection is required' }),
     weekStartDate: z
         .string()
         .min(1, { message: 'Week start date is required' }),
     weekEndDate: z.string().min(1, { message: 'Week end date is required' }),
-    isPaid: z.boolean().default(false),
+    isPaid: z.boolean().optional().default(false),
 });
 
 const updateWeeklySummarySchema = z.object({
@@ -14,7 +13,6 @@ const updateWeeklySummarySchema = z.object({
 });
 
 const weeklyReportSchema = z.object({
-    workerId: z.string().min(1, { message: 'Worker selection is required' }),
     weekStartDate: z
         .string()
         .min(1, { message: 'Week start date is required' }),

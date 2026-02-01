@@ -1,11 +1,7 @@
+import { FormDateInput } from '@/components/common/FormDateInput';
+import { PageHeader } from '@/components/common/PageHeader';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
     Form,
@@ -14,20 +10,12 @@ import {
     FormField,
     FormItem,
     FormLabel,
-    FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import { useCreateWeeklySummaryMutation } from '@/redux/features/weeklySummary/weeklySummary.api';
-import { useGetWorkersQuery } from '@/redux/features/worker/worker.api';
 import { weeklySummaryZod } from '@/zod/weeklySummary.zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { motion } from 'framer-motion';
+import { Calendar, CheckCircle2, XCircle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -38,11 +26,7 @@ type FormData = z.infer<typeof weeklySummaryZod.createWeeklySummarySchema>;
 const CreateWeeklySummary = () => {
     const [createWeeklySummary, { isLoading }] =
         useCreateWeeklySummaryMutation();
-    const { data: workersData, isLoading: isLoadingWorkers } =
-        useGetWorkersQuery();
     const navigate = useNavigate();
-
-    const workers = workersData?.data || [];
 
     // Get current week dates
     const today = new Date();
@@ -55,19 +39,20 @@ const CreateWeeklySummary = () => {
     endOfWeek.setDate(startOfWeek.getDate() + 6);
 
     const form = useForm<FormData>({
-        resolver: zodResolver(weeklySummaryZod.createWeeklySummarySchema),
+        resolver: zodResolver(
+            weeklySummaryZod.createWeeklySummarySchema
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ) as any,
         defaultValues: {
-            workerId: '',
             weekStartDate: startOfWeek.toISOString().split('T')[0],
             weekEndDate: endOfWeek.toISOString().split('T')[0],
-            isPaid: false,
         },
     });
 
     const onSubmit = async (data: FormData) => {
         try {
             await createWeeklySummary(data).unwrap();
-            toast.success('সাপ্তাহিক সারাংশ তৈরি হয়েছে');
+            toast.success('সকল শ্রমিকের সাপ্তাহিক সারাংশ তৈরি হয়েছে');
             navigate('/dashboard/admin/weekly-summary-list');
         } catch (error) {
             console.error(error);
@@ -76,131 +61,128 @@ const CreateWeeklySummary = () => {
     };
 
     return (
-        <div className='max-w-2xl mx-auto'>
+        <div className='container max-w-3xl mx-auto py-6'>
             <Card>
-                <CardHeader>
-                    <CardTitle className='text-2xl'>
-                        সাপ্তাহিক সারাংশ তৈরি
-                    </CardTitle>
-                    <CardDescription>
-                        শ্রমিকের সাপ্তাহিক কাজের সারাংশ তৈরি করুন
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Form {...form}>
-                        <form
-                            onSubmit={form.handleSubmit(onSubmit)}
-                            className='space-y-6'
-                        >
-                            <FormField
-                                control={form.control}
-                                name='workerId'
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>
-                                            শ্রমিক নির্বাচন করুন *
-                                        </FormLabel>
-                                        <Select
-                                            onValueChange={field.onChange}
-                                            defaultValue={field.value}
-                                            disabled={isLoadingWorkers}
-                                        >
-                                            <FormControl>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder='শ্রমিক নির্বাচন করুন' />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                {workers.map((worker) => (
-                                                    <SelectItem
-                                                        key={worker.id}
-                                                        value={worker.id}
-                                                    >
-                                                        {worker.name}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                        <FormDescription className='sr-only'>
-                                            যে শ্রমিকের সাপ্তাহিক সারাংশ তৈরি
-                                            করতে চান
-                                        </FormDescription>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <div className='grid grid-cols-2 gap-4'>
-                                <FormField
-                                    control={form.control}
-                                    name='weekStartDate'
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>সপ্তাহ শুরু *</FormLabel>
-                                            <FormControl>
-                                                <Input type='date' {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={form.control}
-                                    name='weekEndDate'
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>সপ্তাহ শেষ *</FormLabel>
-                                            <FormControl>
-                                                <Input type='date' {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                <PageHeader
+                    title='সাপ্তাহিক সারাংশ তৈরি'
+                    description='সকল সক্রিয় শ্রমিকের জন্য স্বয়ংক্রিয়ভাবে সাপ্তাহিক সারাংশ তৈরি করুন'
+                    showBackButton={true}
+                    backButtonLabel='ফিরে যান'
+                />
+                <CardContent className='pt-6'>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4 }}
+                    >
+                        {/* Info Alert */}
+                        <div className='mb-6 p-4 rounded-lg bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800'>
+                            <div className='flex items-start gap-3'>
+                                <Calendar className='h-5 w-5 text-blue-600 mt-0.5' />
+                                <div className='space-y-1'>
+                                    <p className='text-sm font-medium text-blue-900 dark:text-blue-100'>
+                                        স্বয়ংক্রিয় সারাংশ তৈরি
+                                    </p>
+                                    <p className='text-sm text-blue-700 dark:text-blue-300'>
+                                        নির্বাচিত সপ্তাহের জন্য সকল সক্রিয়
+                                        শ্রমিকের উপস্থিতি ও বেতন হিসাব করে
+                                        স্বয়ংক্রিয়ভাবে সারাংশ তৈরি হবে।
+                                    </p>
+                                </div>
                             </div>
+                        </div>
 
-                            <FormField
-                                control={form.control}
-                                name='isPaid'
-                                render={({ field }) => (
-                                    <FormItem className='flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4'>
-                                        <FormControl>
-                                            <Checkbox
-                                                checked={field.value}
-                                                onCheckedChange={field.onChange}
-                                            />
-                                        </FormControl>
-                                        <div className='space-y-1 leading-none'>
-                                            <FormLabel>পরিশোধিত</FormLabel>
-                                            <FormDescription>
-                                                বেতন পরিশোধ করা হয়েছে কিনা
-                                            </FormDescription>
-                                        </div>
-                                    </FormItem>
-                                )}
-                            />
+                        <Form {...form}>
+                            <form
+                                onSubmit={form.handleSubmit(onSubmit)}
+                                className='space-y-6'
+                            >
+                                {/* Date Range */}
+                                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                                    <FormDateInput
+                                        control={form.control}
+                                        name='weekStartDate'
+                                        label='সপ্তাহ শুরুর তারিখ'
+                                        required
+                                        delay={0.1}
+                                    />
+                                    <FormDateInput
+                                        control={form.control}
+                                        name='weekEndDate'
+                                        label='সপ্তাহ শেষের তারিখ'
+                                        required
+                                        delay={0.2}
+                                    />
+                                </div>
 
-                            <div className='flex gap-4'>
-                                <Button
-                                    type='submit'
-                                    className='flex-1'
-                                    disabled={isLoading}
+                                {/* Payment Status */}
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.3 }}
                                 >
-                                    {isLoading
-                                        ? 'তৈরি হচ্ছে...'
-                                        : 'সারাংশ তৈরি করুন'}
-                                </Button>
-                                <Button
-                                    type='button'
-                                    variant='outline'
-                                    onClick={() => navigate(-1)}
+                                    <FormField
+                                        control={form.control}
+                                        name='isPaid'
+                                        render={({ field }) => (
+                                            <FormItem className='flex flex-row items-center gap-3 space-y-0 rounded-lg border p-4 hover:bg-muted/50 transition-colors'>
+                                                <FormControl>
+                                                    <Checkbox
+                                                        checked={field.value}
+                                                        onCheckedChange={
+                                                            field.onChange
+                                                        }
+                                                    />
+                                                </FormControl>
+                                                <div className='flex-1 space-y-1 leading-none'>
+                                                    <FormLabel className='flex items-center gap-2 cursor-pointer'>
+                                                        {field.value ? (
+                                                            <CheckCircle2 className='h-4 w-4 text-green-600' />
+                                                        ) : (
+                                                            <XCircle className='h-4 w-4 text-orange-600' />
+                                                        )}
+                                                        পরিশোধের স্ট্যাটাস
+                                                    </FormLabel>
+                                                    <FormDescription>
+                                                        {field.value
+                                                            ? 'বেতন পরিশোধিত হিসেবে চিহ্নিত থাকবে'
+                                                            : 'বেতন বকেয়া হিসেবে চিহ্নিত থাকবে'}
+                                                    </FormDescription>
+                                                </div>
+                                            </FormItem>
+                                        )}
+                                    />
+                                </motion.div>
+
+                                {/* Action Buttons */}
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.4 }}
+                                    className='flex gap-4 pt-2'
                                 >
-                                    বাতিল
-                                </Button>
-                            </div>
-                        </form>
-                    </Form>
+                                    <Button
+                                        type='submit'
+                                        className='flex-1'
+                                        disabled={isLoading}
+                                        size='lg'
+                                    >
+                                        {isLoading
+                                            ? 'সারাংশ তৈরি হচ্ছে...'
+                                            : 'সকল শ্রমিকের সারাংশ তৈরি করুন'}
+                                    </Button>
+                                    <Button
+                                        type='button'
+                                        variant='outline'
+                                        onClick={() => navigate(-1)}
+                                        size='lg'
+                                    >
+                                        বাতিল
+                                    </Button>
+                                </motion.div>
+                            </form>
+                        </Form>
+                    </motion.div>
                 </CardContent>
             </Card>
         </div>

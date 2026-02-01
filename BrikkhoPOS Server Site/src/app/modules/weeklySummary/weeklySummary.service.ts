@@ -8,52 +8,70 @@ const createWeeklySummary = async (req: Request) => {
     const payload = req.body;
 
     try {
-        const worker = await prisma.worker.findUnique({
-            where: { id: payload.workerId },
-        });
-
-        if (!worker) {
-            throw new ApiError(404, 'Worker not found');
-        }
-
         // Convert date strings to proper Date format
         const weekStartDate = new Date(payload.weekStartDate);
         const weekEndDate = new Date(payload.weekEndDate);
 
-        // Get attendances within the date range
-        const workerAttendance = await prisma.attendance.findMany({
+        // Get all active workers
+        const workers = await prisma.worker.findMany({
             where: {
-                workerId: payload.workerId,
-                date: {
-                    gte: weekStartDate,
-                    lte: weekEndDate,
-                },
+                isDeleted: false,
+                status: 'ACTIVE',
             },
         });
 
-        // Calculate days worked and salary
-        const daysWorked = workerAttendance.filter((a) => a.isPresent).length;
-        const totalSalary = daysWorked * worker.dailySalary;
+        if (workers.length === 0) {
+            throw new ApiError(404, 'No active workers found');
+        }
 
-        const result = await prisma.weeklySummary.create({
-            data: {
-                workerId: payload.workerId,
-                weekStartDate,
-                weekEndDate,
-                totalDaysWorked: daysWorked,
-                totalSalary,
-            },
-            include: {
-                worker: true,
-                adjustments: true,
-            },
-        });
-        return result;
+        // Create weekly summaries for all workers
+        const createdSummaries = await Promise.all(
+            workers.map(async (worker) => {
+                // Get attendances within the date range
+                const workerAttendance = await prisma.attendance.findMany({
+                    where: {
+                        workerId: worker.id,
+                        date: {
+                            gte: weekStartDate,
+                            lte: weekEndDate,
+                        },
+                    },
+                });
+
+                // Calculate days worked and salary
+                const daysWorked = workerAttendance.filter(
+                    (a) => a.isPresent
+                ).length;
+                const totalSalary = daysWorked * worker.dailySalary;
+
+                // Create weekly summary for this worker
+                return await prisma.weeklySummary.create({
+                    data: {
+                        workerId: worker.id,
+                        weekStartDate,
+                        weekEndDate,
+                        totalDaysWorked: daysWorked,
+                        totalSalary,
+                        isPaid: payload.isPaid || false,
+                    },
+                    include: {
+                        worker: true,
+                        adjustments: true,
+                    },
+                });
+            })
+        );
+
+        return {
+            message: `Successfully created weekly summaries for ${createdSummaries.length} workers`,
+            count: createdSummaries.length,
+            summaries: createdSummaries,
+        };
     } catch (error: any) {
         if (error.code === 'P2002') {
             throw new ApiError(
                 400,
-                `Weekly summary already exists for this worker on the selected week. Please update existing record instead.`
+                `Weekly summary already exists for one or more workers on the selected week. Please update existing records instead.`
             );
         }
         throw error;
@@ -176,20 +194,20 @@ const deleteWeeklySummary = async (req: Request) => {
 //Main functon to generate weekly report
 
 const generateWeeklyReport = async (req: Request) => {
-    const { startDate, endDate } = req.body;
+    const { weekStartDate, weekEndDate } = req.body;
 
-    if (!startDate || !endDate) {
+    if (!weekStartDate || !weekEndDate) {
         throw new ApiError(
             400,
-            'startDate and endDate are required. Format: YYYY-MM-DD'
+            'weekStartDate and weekEndDate are required. Format: YYYY-MM-DD'
         );
     }
 
-    const start = new Date(startDate);
-    const end = new Date(endDate);
+    const start = new Date(weekStartDate);
+    const end = new Date(weekEndDate);
 
     if (start > end) {
-        throw new ApiError(400, 'startDate must be before endDate');
+        throw new ApiError(400, 'weekStartDate must be before weekEndDate');
     }
 
     // Get all active workers
@@ -289,8 +307,8 @@ const generateWeeklyReport = async (req: Request) => {
 
     return {
         reportPeriod: {
-            startDate,
-            endDate,
+            startDate: weekStartDate,
+            endDate: weekEndDate,
             totalDays:
                 Math.ceil(
                     (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)

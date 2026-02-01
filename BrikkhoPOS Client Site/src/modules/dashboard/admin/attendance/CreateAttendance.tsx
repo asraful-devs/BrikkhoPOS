@@ -207,7 +207,7 @@ const CreateAttendance = () => {
                                     }
                                     className='w-48'
                                 />
-                                {existingAttendances?.data &&
+                                {/* {existingAttendances?.data &&
                                     existingAttendances.data.length > 0 && (
                                         <Badge
                                             variant='secondary'
@@ -216,7 +216,7 @@ const CreateAttendance = () => {
                                             ✓ {existingAttendances.data.length}{' '}
                                             জনের হাজিরা আছে
                                         </Badge>
-                                    )}
+                                    )} */}
                             </div>
                         </div>
                     </div>

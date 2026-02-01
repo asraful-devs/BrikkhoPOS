@@ -5,7 +5,6 @@ import CreateSalaryAdjustment from '../modules/dashboard/admin/salaryAdjustment/
 import SalaryAdjustmentList from '../modules/dashboard/admin/salaryAdjustment/SalaryAdjustmentList';
 import CreateWeeklySummary from '../modules/dashboard/admin/weeklySummary/CreateWeeklySummary';
 import WeeklyReport from '../modules/dashboard/admin/weeklySummary/WeeklyReport';
-import WeeklySummaryDetails from '../modules/dashboard/admin/weeklySummary/WeeklySummaryDetails';
 import WeeklySummaryList from '../modules/dashboard/admin/weeklySummary/WeeklySummaryList';
 import CreateWorkerForm from '../modules/dashboard/admin/worker/CreateWorkerForm';
 import EditWorkerForm from '../modules/dashboard/admin/worker/EditWorkerForm';
@@ -66,7 +65,7 @@ export const adminSidebarItems: ISidebarItem[] = [
         title: 'সাপ্তাহিক সারসংক্ষেপ',
         items: [
             {
-                title: 'সারসংক্ষেপ তৈরি করুন',
+                title: 'সাপ্তাহিক রিপোর্ট তৈরি করুন',
                 url: '/dashboard/admin/create-weekly-summary',
                 component: CreateWeeklySummary,
             },
@@ -76,14 +75,10 @@ export const adminSidebarItems: ISidebarItem[] = [
                 component: WeeklySummaryList,
             },
             {
-                title: 'সারসংক্ষেপের বিস্তারিত',
-                url: '/dashboard/admin/weekly-summary/:id',
-                component: WeeklySummaryDetails,
-            },
-            {
-                title: 'সাপ্তাহিক রিপোর্ট',
+                title: 'সাপ্তাহিক রিপোর্ট বিস্তারিত পেজ',
                 url: '/dashboard/admin/weekly-report',
                 component: WeeklyReport,
+                showInSidebar: false,
             },
         ],
     },
