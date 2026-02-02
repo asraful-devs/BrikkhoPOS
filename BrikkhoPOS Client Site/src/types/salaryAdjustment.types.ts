@@ -1,6 +1,7 @@
 export type TAdjustmentType = 'BONUS' | 'OVERTIME' | 'DEDUCTION' | 'ADVANCE';
 
 export interface ISalaryAdjustment {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     workerId: any;
     id: string;
     weeklySummaryId: string;
