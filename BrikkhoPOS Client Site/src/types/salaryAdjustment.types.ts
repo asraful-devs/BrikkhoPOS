@@ -1,6 +1,7 @@
 export type TAdjustmentType = 'BONUS' | 'OVERTIME' | 'DEDUCTION' | 'ADVANCE';
 
 export interface ISalaryAdjustment {
+    workerId: any;
     id: string;
     weeklySummaryId: string;
     type: TAdjustmentType;
