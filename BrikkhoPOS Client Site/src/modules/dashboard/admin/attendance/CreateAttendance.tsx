@@ -16,13 +16,13 @@ import {
 import { useGetWorkersQuery } from '@/redux/features/worker/worker.api';
 import type { IAttendance } from '@/types/attendance.types';
 import type { IWorker } from '@/types/worker.types';
-import { Check, Loader2, Minus, User, X } from 'lucide-react';
+import { Check, Loader2, User, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 interface WorkerAttendanceState {
     workerId: string;
-    status: 'PRESENT' | 'ABSENT' | 'HALF_DAY' | null;
+    status: 'PRESENT' | 'ABSENT' | null;
     workHours: number;
     note: string;
 }
@@ -62,12 +62,9 @@ const CreateAttendance = () => {
             );
 
             if (existingAttendance) {
-                let status: 'PRESENT' | 'ABSENT' | 'HALF_DAY' | null = null;
+                let status: 'PRESENT' | 'ABSENT' | null = null;
                 if (existingAttendance.isPresent) {
-                    status =
-                        existingAttendance.workHours === 4
-                            ? 'HALF_DAY'
-                            : 'PRESENT';
+                    status = 'PRESENT';
                 } else {
                     status = 'ABSENT';
                 }
@@ -93,14 +90,13 @@ const CreateAttendance = () => {
 
     const handleStatusClick = (
         workerId: string,
-        status: 'PRESENT' | 'ABSENT' | 'HALF_DAY'
+        status: 'PRESENT' | 'ABSENT'
     ) => {
         const currentState = workerStates[workerId];
         const newStatus = currentState?.status === status ? null : status;
 
         let workHours = 8;
-        if (newStatus === 'HALF_DAY') workHours = 4;
-        else if (newStatus === 'ABSENT') workHours = 0;
+        if (newStatus === 'ABSENT') workHours = 0;
 
         setWorkerStates((prev) => ({
             ...prev,
@@ -156,11 +152,6 @@ const CreateAttendance = () => {
                 label: 'অনুপস্থিত',
                 variant: 'destructive' as const,
                 className: '',
-            },
-            HALF_DAY: {
-                label: 'অর্ধদিবস',
-                variant: 'secondary' as const,
-                className: 'bg-orange-500 hover:bg-orange-600 text-white',
             },
         };
 
@@ -272,10 +263,6 @@ const CreateAttendance = () => {
                             <span className='text-sm'>উপস্থিত (৮ ঘণ্টা)</span>
                         </div>
                         <div className='flex items-center gap-2'>
-                            <div className='w-3 h-3 rounded-full bg-orange-500' />
-                            <span className='text-sm'>অর্ধদিবস (৪ ঘণ্টা)</span>
-                        </div>
-                        <div className='flex items-center gap-2'>
                             <div className='w-3 h-3 rounded-full bg-red-500' />
                             <span className='text-sm'>অনুপস্থিত (০ ঘণ্টা)</span>
                         </div>
@@ -326,7 +313,7 @@ const CreateAttendance = () => {
                             </CardHeader>
                             <CardContent className='space-y-3'>
                                 {/* Status Buttons */}
-                                <div className='grid grid-cols-3 gap-2'>
+                                <div className='grid grid-cols-2 gap-2'>
                                     <Button
                                         type='button'
                                         variant={
@@ -349,29 +336,6 @@ const CreateAttendance = () => {
                                     >
                                         <Check className='h-4 w-4 mr-1' />
                                         উপস্থিত
-                                    </Button>
-                                    <Button
-                                        type='button'
-                                        variant={
-                                            state.status === 'HALF_DAY'
-                                                ? 'default'
-                                                : 'outline'
-                                        }
-                                        size='sm'
-                                        onClick={() =>
-                                            handleStatusClick(
-                                                worker.id,
-                                                'HALF_DAY'
-                                            )
-                                        }
-                                        className={
-                                            state.status === 'HALF_DAY'
-                                                ? 'bg-orange-500 hover:bg-orange-600'
-                                                : 'hover:bg-orange-50'
-                                        }
-                                    >
-                                        <Minus className='h-4 w-4 mr-1' />
-                                        অর্ধদিবস
                                     </Button>
                                     <Button
                                         type='button'

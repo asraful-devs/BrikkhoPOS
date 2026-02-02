@@ -32,11 +32,17 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-type FormData = z.infer<typeof salaryAdjustmentZod.createSalaryAdjustmentSchema>;
+type FormData = z.infer<
+    typeof salaryAdjustmentZod.createSalaryAdjustmentSchema
+>;
 
 const adjustmentTypes = [
     { value: 'BONUS', label: 'বোনাস', description: 'অতিরিক্ত পুরস্কার' },
-    { value: 'OVERTIME', label: 'ওভারটাইম', description: 'অতিরিক্ত সময়ের জন্য' },
+    {
+        value: 'OVERTIME',
+        label: 'ওভারটাইম',
+        description: 'অতিরিক্ত সময়ের জন্য',
+    },
     { value: 'DEDUCTION', label: 'কর্তন', description: 'বেতন থেকে কাটা' },
     { value: 'ADVANCE', label: 'অগ্রিম', description: 'আগাম বেতন' },
 ];
@@ -45,12 +51,27 @@ const CreateSalaryAdjustment = () => {
     const [searchParams] = useSearchParams();
     const summaryId = searchParams.get('summaryId') || '';
 
-    const [createAdjustment, { isLoading }] = useCreateSalaryAdjustmentMutation();
+    const [createAdjustment, { isLoading }] =
+        useCreateSalaryAdjustmentMutation();
     const { data: summariesData, isLoading: isLoadingSummaries } =
         useGetWeeklySummariesQuery();
     const navigate = useNavigate();
 
     const summaries = summariesData?.data || [];
+
+    // গত সপ্তাহের তারিখ বের করা
+    const getLastWeekDate = () => {
+        const today = new Date();
+        const lastWeek = new Date(today.setDate(today.getDate() - 7));
+        return lastWeek;
+    };
+
+    // শুধুমাত্র গত সপ্তাহ থেকে বর্তমান সপ্তাহের সারাংশ ফিল্টার করা
+    const recentSummaries = summaries.filter((summary) => {
+        const summaryDate = new Date(summary.weekStartDate);
+        const lastWeekDate = getLastWeekDate();
+        return summaryDate >= lastWeekDate;
+    });
 
     const form = useForm<FormData>({
         resolver: zodResolver(salaryAdjustmentZod.createSalaryAdjustmentSchema),
@@ -74,27 +95,30 @@ const CreateSalaryAdjustment = () => {
     };
 
     return (
-        <div className="max-w-2xl mx-auto">
+        <div className='max-w-2xl mx-auto'>
             <Card>
                 <CardHeader>
-                    <CardTitle className="text-2xl">বেতন সমন্বয় যোগ করুন</CardTitle>
+                    <CardTitle className='text-2xl'>
+                        বেতন সমন্বয় যোগ করুন
+                    </CardTitle>
                     <CardDescription>
-                        বোনাস, ওভারটাইম, কর্তন বা অগ্রিম যোগ করুন
+                        বোনাস, ওভারটাইম, কর্তন বা অগ্রিম যোগ করুন (শুধুমাত্র গত
+                        সপ্তাহের জন্য)
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>
                         <form
                             onSubmit={form.handleSubmit(onSubmit)}
-                            className="space-y-6"
+                            className='space-y-6'
                         >
                             <FormField
                                 control={form.control}
-                                name="weeklySummaryId"
+                                name='weeklySummaryId'
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
-                                            সাপ্তাহিক সারাংশ নির্বাচন করুন *
+                                            কর্মী ও সপ্তাহ নির্বাচন করুন *
                                         </FormLabel>
                                         <Select
                                             onValueChange={field.onChange}
@@ -103,27 +127,65 @@ const CreateSalaryAdjustment = () => {
                                         >
                                             <FormControl>
                                                 <SelectTrigger>
-                                                    <SelectValue placeholder="সারাংশ নির্বাচন করুন" />
+                                                    <SelectValue placeholder='কর্মী ও সপ্তাহ নির্বাচন করুন' />
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                {summaries.map((summary) => (
-                                                    <SelectItem
-                                                        key={summary.id}
-                                                        value={summary.id}
-                                                    >
-                                                        {summary.worker?.name} -{' '}
-                                                        {new Date(
-                                                            summary.weekStartDate
-                                                        ).toLocaleDateString(
-                                                            'bn-BD'
-                                                        )}
-                                                    </SelectItem>
-                                                ))}
+                                                {recentSummaries.length ===
+                                                0 ? (
+                                                    <div className='p-4 text-center text-muted-foreground'>
+                                                        গত সপ্তাহের কোনো সারাংশ
+                                                        পাওয়া যায়নি
+                                                    </div>
+                                                ) : (
+                                                    recentSummaries.map(
+                                                        (summary) => {
+                                                            const weekStart =
+                                                                new Date(
+                                                                    summary.weekStartDate
+                                                                );
+                                                            const weekEnd =
+                                                                new Date(
+                                                                    summary.weekEndDate
+                                                                );
+
+                                                            return (
+                                                                <SelectItem
+                                                                    key={
+                                                                        summary.id
+                                                                    }
+                                                                    value={
+                                                                        summary.id
+                                                                    }
+                                                                >
+                                                                    <div className='flex flex-col'>
+                                                                        <span className='font-semibold'>
+                                                                            {
+                                                                                summary
+                                                                                    .worker
+                                                                                    ?.name
+                                                                            }
+                                                                        </span>
+                                                                        <span className='text-sm text-muted-foreground'>
+                                                                            {weekStart.toLocaleDateString(
+                                                                                'bn-BD'
+                                                                            )}{' '}
+                                                                            -{' '}
+                                                                            {weekEnd.toLocaleDateString(
+                                                                                'bn-BD'
+                                                                            )}
+                                                                        </span>
+                                                                    </div>
+                                                                </SelectItem>
+                                                            );
+                                                        }
+                                                    )
+                                                )}
                                             </SelectContent>
                                         </Select>
-                                        <FormDescription className="sr-only">
-                                            যে সাপ্তাহিক সারাংশে সমন্বয় যোগ করতে চান
+                                        <FormDescription>
+                                            শুধুমাত্র গত সপ্তাহের সারাংশে
+                                            সমন্বয় যোগ করা যাবে
                                         </FormDescription>
                                         <FormMessage />
                                     </FormItem>
@@ -132,7 +194,7 @@ const CreateSalaryAdjustment = () => {
 
                             <FormField
                                 control={form.control}
-                                name="type"
+                                name='type'
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>সমন্বয়ের ধরন *</FormLabel>
@@ -142,7 +204,7 @@ const CreateSalaryAdjustment = () => {
                                         >
                                             <FormControl>
                                                 <SelectTrigger>
-                                                    <SelectValue placeholder="ধরন নির্বাচন করুন" />
+                                                    <SelectValue placeholder='ধরন নির্বাচন করুন' />
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
@@ -152,11 +214,14 @@ const CreateSalaryAdjustment = () => {
                                                         value={type.value}
                                                     >
                                                         <div>
-                                                            <span className="font-medium">
+                                                            <span className='font-medium'>
                                                                 {type.label}
                                                             </span>
-                                                            <span className="text-muted-foreground ml-2 text-sm">
-                                                                - {type.description}
+                                                            <span className='text-muted-foreground ml-2 text-sm'>
+                                                                -{' '}
+                                                                {
+                                                                    type.description
+                                                                }
                                                             </span>
                                                         </div>
                                                     </SelectItem>
@@ -170,16 +235,24 @@ const CreateSalaryAdjustment = () => {
 
                             <FormField
                                 control={form.control}
-                                name="amount"
+                                name='amount'
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>পরিমাণ (টাকা) *</FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="500"
-                                                type="number"
-                                                min="0"
+                                                placeholder='৫০০'
+                                                type='number'
+                                                min='0'
+                                                step='0.01'
                                                 {...field}
+                                                onChange={(e) =>
+                                                    field.onChange(
+                                                        parseFloat(
+                                                            e.target.value
+                                                        ) || 0
+                                                    )
+                                                }
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -189,13 +262,13 @@ const CreateSalaryAdjustment = () => {
 
                             <FormField
                                 control={form.control}
-                                name="reason"
+                                name='reason'
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>কারণ</FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="সমন্বয়ের কারণ লিখুন"
+                                                placeholder='সমন্বয়ের কারণ লিখুন'
                                                 {...field}
                                             />
                                         </FormControl>
@@ -204,17 +277,22 @@ const CreateSalaryAdjustment = () => {
                                 )}
                             />
 
-                            <div className="flex gap-4">
+                            <div className='flex gap-4'>
                                 <Button
-                                    type="submit"
-                                    className="flex-1"
-                                    disabled={isLoading}
+                                    type='submit'
+                                    className='flex-1'
+                                    disabled={
+                                        isLoading ||
+                                        recentSummaries.length === 0
+                                    }
                                 >
-                                    {isLoading ? 'যোগ হচ্ছে...' : 'সমন্বয় যোগ করুন'}
+                                    {isLoading
+                                        ? 'যোগ হচ্ছে...'
+                                        : 'সমন্বয় যোগ করুন'}
                                 </Button>
                                 <Button
-                                    type="button"
-                                    variant="outline"
+                                    type='button'
+                                    variant='outline'
                                     onClick={() => navigate(-1)}
                                 >
                                     বাতিল
