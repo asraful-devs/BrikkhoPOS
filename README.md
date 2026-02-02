@@ -74,8 +74,6 @@ BrikkhoPOS/
 - **Validation**: Zod
 - **Development**: tsx
 
-```
-
 ## 📚 Documentation
 
 - **[Client Documentation](./BrikkhoPOS%20Client%20Site/README.md)** - Frontend setup and features
@@ -133,21 +131,14 @@ BrikkhoPOS/
 - Collapsible navigation
 - Progressive Web App (PWA) ready
 
-
 ## 📄 License
 
 Md Asraful
-
-
 
 ## 📞 Support
 
 For support, asraful.devs@gmail.com or open an issue in this repository.
 
-
----
-
 <div align="center">
   <strong>Built with ❤️ by the BrikkhoPOS Team</strong>
 </div>
-```
