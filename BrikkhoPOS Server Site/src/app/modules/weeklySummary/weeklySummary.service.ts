@@ -295,14 +295,39 @@ const generateWeeklyReport = async (req: Request) => {
     );
 
     // Calculate summary totals
-    const summaryTotals = {
+    interface ISummaryTotals {
+        totalWorkers: number;
+        totalBaseSalary: number;
+        totalBonus: number;
+        totalOvertime: number;
+        totalDeduction: number;
+        totalAdvance: number;
+        totalFinalAmount: number;
+    }
+
+    const summaryTotals: ISummaryTotals = {
         totalWorkers: workers.length,
-        totalBaseSalary: report.reduce((sum, r) => sum + r.baseSalary, 0),
-        totalBonus: report.reduce((sum, r) => sum + r.bonus, 0),
-        totalOvertime: report.reduce((sum, r) => sum + r.overtime, 0),
-        totalDeduction: report.reduce((sum, r) => sum + r.deduction, 0),
-        totalAdvance: report.reduce((sum, r) => sum + r.advance, 0),
-        totalFinalAmount: report.reduce((sum, r) => sum + r.finalAmount, 0),
+        totalBaseSalary: report.reduce(
+            (sum: number, r: any) => sum + r.baseSalary,
+            0
+        ),
+        totalBonus: report.reduce((sum: number, r: any) => sum + r.bonus, 0),
+        totalOvertime: report.reduce(
+            (sum: number, r: any) => sum + r.overtime,
+            0
+        ),
+        totalDeduction: report.reduce(
+            (sum: number, r: any) => sum + r.deduction,
+            0
+        ),
+        totalAdvance: report.reduce(
+            (sum: number, r: any) => sum + r.advance,
+            0
+        ),
+        totalFinalAmount: report.reduce(
+            (sum: number, r: any) => sum + r.finalAmount,
+            0
+        ),
     };
 
     return {

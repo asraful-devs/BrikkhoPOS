@@ -235,7 +235,6 @@ const generateWeeklyReport = async (req) => {
             absentDays: attendances.length - totalDaysWorked,
         };
     }));
-    // Calculate summary totals
     const summaryTotals = {
         totalWorkers: workers.length,
         totalBaseSalary: report.reduce((sum, r) => sum + r.baseSalary, 0),
