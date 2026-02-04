@@ -1,0 +1,12 @@
+import express from 'express';
+import validateRequest from '../../middlewares/validateRequest';
+import { WorkerController } from './worker.controller';
+import { workerVaildation } from './worker.vaildation';
+const router = express.Router();
+router.post('/create-worker', validateRequest(workerVaildation.workerCreateZodSchema), WorkerController.CreateWorker);
+router.get('/get-workers', WorkerController.GetAllWorkers);
+router.get('/get-single-worker/:id', WorkerController.GetSingleWorker);
+router.patch('/update-worker/:id', validateRequest(workerVaildation.workerUpdateZodSchema), WorkerController.UpdateWorker);
+router.patch('/soft-delete-worker/:id', WorkerController.SoftDeleteWorker);
+router.delete('/delete-worker/:id', WorkerController.DeleteWorker);
+export const WorkerRoutes = router;
