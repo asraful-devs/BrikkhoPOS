@@ -16,7 +16,7 @@ router.post(
 // Get my profile - must come before /:id route
 router.get(
     '/me',
-    checkAuth(...Object.values(Role)),
+    checkAuth(...(Object.values(Role) as string[])),
     UserController.GetMyProfile
 );
 
