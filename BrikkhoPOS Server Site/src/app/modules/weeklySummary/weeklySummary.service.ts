@@ -26,7 +26,7 @@ const createWeeklySummary = async (req: Request) => {
 
         // Create weekly summaries for all workers
         const createdSummaries = await Promise.all(
-            workers.map(async (worker) => {
+            workers.map(async (worker: { id: any; dailySalary: number }) => {
                 // Get attendances within the date range
                 const workerAttendance = await prisma.attendance.findMany({
                     where: {
@@ -40,7 +40,7 @@ const createWeeklySummary = async (req: Request) => {
 
                 // Calculate days worked and salary
                 const daysWorked = workerAttendance.filter(
-                    (a) => a.isPresent
+                    (a: { isPresent: any }) => a.isPresent
                 ).length;
                 const totalSalary = daysWorked * worker.dailySalary;
 
@@ -220,78 +220,82 @@ const generateWeeklyReport = async (req: Request) => {
 
     // Generate report for each worker
     const report = await Promise.all(
-        workers.map(async (worker) => {
-            // Get all attendances in the date range
-            const attendances = await prisma.attendance.findMany({
-                where: {
-                    workerId: worker.id,
-                    date: {
-                        gte: start,
-                        lte: end,
+        workers.map(
+            async (worker: { id: any; dailySalary: number; name: any }) => {
+                // Get all attendances in the date range
+                const attendances = await prisma.attendance.findMany({
+                    where: {
+                        workerId: worker.id,
+                        date: {
+                            gte: start,
+                            lte: end,
+                        },
                     },
-                },
-            });
-
-            // Calculate days worked and total salary
-            const totalDaysWorked = attendances.filter(
-                (a) => a.isPresent
-            ).length;
-            const totalSalary = totalDaysWorked * worker.dailySalary;
-
-            // Get adjustments if any weeklySummary exists for this range
-            const weeklySummaries = await prisma.weeklySummary.findMany({
-                where: {
-                    workerId: worker.id,
-                    weekStartDate: {
-                        gte: start,
-                    },
-                    weekEndDate: {
-                        lte: end,
-                    },
-                },
-                include: {
-                    adjustments: true,
-                },
-            });
-
-            // Calculate total adjustments
-            let totalBonus = 0;
-            let totalDeduction = 0;
-            let totalOvertime = 0;
-            let totalAdvance = 0;
-
-            weeklySummaries.forEach((summary) => {
-                summary.adjustments.forEach((adj) => {
-                    if (adj.type === 'BONUS') totalBonus += adj.amount;
-                    if (adj.type === 'DEDUCTION') totalDeduction += adj.amount;
-                    if (adj.type === 'OVERTIME') totalOvertime += adj.amount;
-                    if (adj.type === 'ADVANCE') totalAdvance += adj.amount;
                 });
-            });
 
-            const finalAmount =
-                totalSalary +
-                totalBonus +
-                totalOvertime -
-                totalDeduction -
-                totalAdvance;
+                // Calculate days worked and total salary
+                const totalDaysWorked = attendances.filter(
+                    (a: { isPresent: any }) => a.isPresent
+                ).length;
+                const totalSalary = totalDaysWorked * worker.dailySalary;
 
-            return {
-                workerId: worker.id,
-                workerName: worker.name,
-                dailySalary: worker.dailySalary,
-                totalDaysWorked,
-                baseSalary: totalSalary,
-                bonus: totalBonus,
-                overtime: totalOvertime,
-                deduction: totalDeduction,
-                advance: totalAdvance,
-                finalAmount,
-                attendanceCount: attendances.length,
-                presentDays: totalDaysWorked,
-                absentDays: attendances.length - totalDaysWorked,
-            };
-        })
+                // Get adjustments if any weeklySummary exists for this range
+                const weeklySummaries = await prisma.weeklySummary.findMany({
+                    where: {
+                        workerId: worker.id,
+                        weekStartDate: {
+                            gte: start,
+                        },
+                        weekEndDate: {
+                            lte: end,
+                        },
+                    },
+                    include: {
+                        adjustments: true,
+                    },
+                });
+
+                // Calculate total adjustments
+                let totalBonus = 0;
+                let totalDeduction = 0;
+                let totalOvertime = 0;
+                let totalAdvance = 0;
+
+                weeklySummaries.forEach((summary: { adjustments: any[] }) => {
+                    summary.adjustments.forEach((adj) => {
+                        if (adj.type === 'BONUS') totalBonus += adj.amount;
+                        if (adj.type === 'DEDUCTION')
+                            totalDeduction += adj.amount;
+                        if (adj.type === 'OVERTIME')
+                            totalOvertime += adj.amount;
+                        if (adj.type === 'ADVANCE') totalAdvance += adj.amount;
+                    });
+                });
+
+                const finalAmount =
+                    totalSalary +
+                    totalBonus +
+                    totalOvertime -
+                    totalDeduction -
+                    totalAdvance;
+
+                return {
+                    workerId: worker.id,
+                    workerName: worker.name,
+                    dailySalary: worker.dailySalary,
+                    totalDaysWorked,
+                    baseSalary: totalSalary,
+                    bonus: totalBonus,
+                    overtime: totalOvertime,
+                    deduction: totalDeduction,
+                    advance: totalAdvance,
+                    finalAmount,
+                    attendanceCount: attendances.length,
+                    presentDays: totalDaysWorked,
+                    absentDays: attendances.length - totalDaysWorked,
+                };
+            }
+        )
     );
 
     // Calculate summary totals

@@ -8,6 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
+import * as process from 'node:process';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 globalThis['__dirname'] = path.dirname(fileURLToPath(import.meta.url));
@@ -26,7 +27,10 @@ export * from "./enums";
  * const users = await prisma.user.findMany()
  * ```
  *
- * Read more in our [docs](https://pris.ly/d/client).
+ * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
  */
-export const PrismaClient = $Class.getPrismaClientClass();
+export const PrismaClient = $Class.getPrismaClientClass(__dirname);
 export { Prisma };
+// file annotations for bundling tools to include these files
+path.join(__dirname, "query_engine-windows.dll.node");
+path.join(process.cwd(), "generated/prisma/query_engine-windows.dll.node");
